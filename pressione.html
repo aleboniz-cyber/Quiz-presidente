@@ -834,6 +834,11 @@
         <div class="settings-section">
             <h3>Dati</h3>
             <div class="form-group">
+                <label>Importa dati storici</label>
+                <button class="btn-primary" onclick="importHistoricalData()" id="importBtn">📥 Carica 94 misurazioni storiche</button>
+                <div id="importStatus" style="margin-top:8px;font-size:.85rem;color:var(--text-muted);"></div>
+            </div>
+            <div class="form-group" style="margin-top:16px;">
                 <label>Gestione dati locali</label>
                 <button class="btn-danger" onclick="clearAllData()">🗑️ Elimina tutti i dati</button>
             </div>
@@ -1659,6 +1664,142 @@ document.addEventListener('keydown', e => {
         if (e.target.tagName !== 'BUTTON') saveMeasurement();
     }
 });
+
+// ──────────────────────────────────────────────
+// HISTORICAL DATA IMPORT
+// ──────────────────────────────────────────────
+const HISTORICAL_DATA = [
+  // Agosto 2025
+  { date:'2025-08-29T13:00', sys:160, dia:106, pulse:72,   note:'' },
+  { date:'2025-08-29T23:00', sys:155, dia:107, pulse:75,   note:'' },
+  { date:'2025-08-30T08:00', sys:138, dia:100, pulse:76,   note:'' },
+  { date:'2025-08-30T13:00', sys:156, dia:117, pulse:74,   note:'' },
+  { date:'2025-08-30T18:00', sys:151, dia:113, pulse:80,   note:'' },
+  { date:'2025-08-31T00:00', sys:138, dia:97,  pulse:80,   note:'' },
+  { date:'2025-08-31T09:00', sys:150, dia:105, pulse:75,   note:'' },
+  { date:'2025-08-31T13:00', sys:144, dia:96,  pulse:81,   note:'' },
+  { date:'2025-09-01T00:00', sys:142, dia:108, pulse:78,   note:'' },
+  // Settembre 2025
+  { date:'2025-09-01T09:00', sys:150, dia:103, pulse:75,   note:'' },
+  { date:'2025-09-01T13:00', sys:125, dia:92,  pulse:75,   note:'' },
+  { date:'2025-09-01T18:00', sys:141, dia:96,  pulse:70,   note:'' },
+  { date:'2025-09-02T00:00', sys:132, dia:91,  pulse:71,   note:'' },
+  { date:'2025-09-02T08:00', sys:141, dia:97,  pulse:71,   note:'' },
+  { date:'2025-09-02T15:00', sys:129, dia:97,  pulse:81,   note:'' },
+  { date:'2025-09-03T08:00', sys:135, dia:98,  pulse:69,   note:'' },
+  { date:'2025-09-03T18:00', sys:140, dia:102, pulse:79,   note:'' },
+  { date:'2025-09-04T00:00', sys:126, dia:93,  pulse:75,   note:'' },
+  { date:'2025-09-04T08:00', sys:131, dia:93,  pulse:81,   note:'' },
+  { date:'2025-09-05T07:00', sys:128, dia:86,  pulse:74,   note:'' },
+  { date:'2025-09-05T20:00', sys:138, dia:100, pulse:82,   note:'' },
+  { date:'2025-09-06T08:00', sys:139, dia:95,  pulse:66,   note:'' },
+  { date:'2025-09-07T00:00', sys:107, dia:83,  pulse:92,   note:'' },
+  { date:'2025-09-07T08:00', sys:123, dia:88,  pulse:78,   note:'' },
+  { date:'2025-09-07T12:00', sys:136, dia:85,  pulse:94,   note:'' },
+  { date:'2025-09-08T10:00', sys:140, dia:90,  pulse:78,   note:'' },
+  { date:'2025-09-08T19:00', sys:132, dia:97,  pulse:74,   note:'' },
+  { date:'2025-09-10T17:00', sys:139, dia:100, pulse:72,   note:'' },
+  { date:'2025-09-12T08:00', sys:135, dia:90,  pulse:62,   note:'' },
+  { date:'2025-09-12T12:00', sys:139, dia:103, pulse:72,   note:'' },
+  { date:'2025-09-13T08:00', sys:143, dia:98,  pulse:67,   note:'' },
+  { date:'2025-09-13T13:00', sys:138, dia:92,  pulse:73,   note:'' },
+  { date:'2025-09-13T19:00', sys:148, dia:99,  pulse:67,   note:'' },
+  { date:'2025-09-14T08:00', sys:144, dia:98,  pulse:66,   note:'' },
+  { date:'2025-09-14T15:00', sys:134, dia:94,  pulse:69,   note:'' },
+  { date:'2025-09-15T08:00', sys:131, dia:94,  pulse:68,   note:'' },
+  { date:'2025-09-16T08:00', sys:134, dia:84,  pulse:84,   note:'' },
+  { date:'2025-09-18T08:00', sys:113, dia:93,  pulse:null, note:'' },
+  { date:'2025-09-19T08:00', sys:140, dia:95,  pulse:null, note:'' },
+  { date:'2025-09-19T20:00', sys:148, dia:110, pulse:72,   note:'' },
+  { date:'2025-09-26T09:00', sys:146, dia:99,  pulse:78,   note:'' },
+  { date:'2025-09-27T08:00', sys:134, dia:97,  pulse:63,   note:'' },
+  { date:'2025-09-28T09:00', sys:137, dia:91,  pulse:68,   note:'' },
+  { date:'2025-09-29T08:00', sys:136, dia:93,  pulse:66,   note:'' },
+  { date:'2025-09-30T08:00', sys:134, dia:93,  pulse:66,   note:'' },
+  // Ottobre 2025
+  { date:'2025-10-08T07:00', sys:136, dia:96,  pulse:null, note:'' },
+  { date:'2025-10-09T08:00', sys:145, dia:96,  pulse:67,   note:'' },
+  { date:'2025-10-10T08:00', sys:135, dia:91,  pulse:72,   note:'' },
+  { date:'2025-10-11T08:00', sys:140, dia:99,  pulse:null, note:'' },
+  { date:'2025-10-13T09:00', sys:144, dia:98,  pulse:62,   note:'' },
+  { date:'2025-10-20T08:00', sys:135, dia:95,  pulse:74,   note:'' },
+  { date:'2025-10-23T08:00', sys:129, dia:93,  pulse:72,   note:'' },
+  { date:'2025-10-29T08:00', sys:125, dia:90,  pulse:72,   note:'' },
+  { date:'2025-10-31T08:00', sys:135, dia:98,  pulse:72,   note:'' },
+  // Novembre 2025
+  { date:'2025-11-01T08:00', sys:130, dia:93,  pulse:70,   note:'' },
+  { date:'2025-11-09T08:00', sys:132, dia:92,  pulse:78,   note:'' },
+  { date:'2025-11-11T08:00', sys:125, dia:90,  pulse:67,   note:'' },
+  { date:'2025-11-13T08:00', sys:114, dia:85,  pulse:76,   note:'' },
+  { date:'2025-11-15T08:00', sys:130, dia:85,  pulse:79,   note:'' },
+  { date:'2025-11-16T10:00', sys:126, dia:90,  pulse:74,   note:'' },
+  { date:'2025-11-24T08:00', sys:113, dia:84,  pulse:72,   note:'' },
+  { date:'2025-11-25T08:00', sys:125, dia:84,  pulse:75,   note:'' },
+  { date:'2025-11-28T08:00', sys:129, dia:90,  pulse:76,   note:'' },
+  { date:'2025-11-29T09:00', sys:126, dia:86,  pulse:72,   note:'' },
+  // Dicembre 2025
+  { date:'2025-12-01T11:00', sys:105, dia:77,  pulse:91,   note:'' },
+  { date:'2025-12-05T09:00', sys:125, dia:80,  pulse:75,   note:'' },
+  { date:'2025-12-08T10:00', sys:116, dia:86,  pulse:75,   note:'' },
+  { date:'2025-12-16T08:00', sys:128, dia:96,  pulse:61,   note:'' },
+  { date:'2025-12-18T08:00', sys:126, dia:90,  pulse:61,   note:'' },
+  // Febbraio 2026
+  { date:'2026-02-02T11:00', sys:116, dia:85,  pulse:67,   note:'' },
+  { date:'2026-02-05T08:00', sys:113, dia:82,  pulse:69,   note:'' },
+  { date:'2026-02-12T08:00', sys:140, dia:94,  pulse:65,   note:'' },
+  { date:'2026-02-13T13:00', sys:134, dia:94,  pulse:68,   note:'' },
+  { date:'2026-02-14T08:00', sys:124, dia:92,  pulse:66,   note:'' },
+  { date:'2026-02-16T08:00', sys:125, dia:84,  pulse:66,   note:'' },
+  { date:'2026-02-18T08:00', sys:131, dia:94,  pulse:74,   note:'' },
+  { date:'2026-02-19T09:00', sys:135, dia:92,  pulse:73,   note:'' },
+  { date:'2026-02-21T12:00', sys:121, dia:86,  pulse:78,   note:'' },
+  { date:'2026-02-23T08:00', sys:133, dia:91,  pulse:70,   note:'' },
+  { date:'2026-02-23T13:00', sys:117, dia:79,  pulse:81,   note:'' },
+  { date:'2026-02-27T08:00', sys:125, dia:97,  pulse:70,   note:'' },
+  { date:'2026-02-28T08:00', sys:119, dia:83,  pulse:71,   note:'' },
+  // Marzo 2026
+  { date:'2026-03-04T08:00', sys:121, dia:84,  pulse:71,   note:'' },
+  { date:'2026-03-05T08:00', sys:124, dia:93,  pulse:69,   note:'' },
+  { date:'2026-03-09T08:00', sys:132, dia:96,  pulse:70,   note:'' },
+  { date:'2026-03-12T07:00', sys:129, dia:97,  pulse:71,   note:'' },
+  { date:'2026-03-13T08:00', sys:130, dia:94,  pulse:72,   note:'' },
+  { date:'2026-03-18T08:00', sys:132, dia:98,  pulse:70,   note:'' },
+  { date:'2026-03-25T08:00', sys:130, dia:89,  pulse:73,   note:'' },
+  { date:'2026-03-30T08:00', sys:135, dia:97,  pulse:62,   note:'' },
+  // Aprile 2026
+  { date:'2026-04-03T08:00', sys:141, dia:91,  pulse:70,   note:'' },
+  // Maggio 2026
+  { date:'2026-05-01T09:00', sys:126, dia:99,  pulse:68,   note:'' },
+  { date:'2026-05-03T08:00', sys:128, dia:89,  pulse:69,   note:'' },
+  { date:'2026-05-21T08:00', sys:127, dia:94,  pulse:74,   note:'' },
+];
+
+function importHistoricalData() {
+    const existing  = getRecords();
+    const existDates = new Set(existing.map(r => r.date));
+
+    let added = 0;
+    const toAdd = HISTORICAL_DATA
+        .filter(h => !existDates.has(h.date))
+        .map((h, i) => ({ id: Date.now() - (HISTORICAL_DATA.length - i) * 1000, ...h }));
+
+    if (toAdd.length === 0) {
+        document.getElementById('importStatus').textContent = '✅ Tutti i dati storici sono già presenti nello storico.';
+        return;
+    }
+
+    const merged = [...existing, ...toAdd]
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    saveRecords(merged);
+    added = toAdd.length;
+
+    document.getElementById('importBtn').disabled = true;
+    document.getElementById('importBtn').textContent = `✅ ${added} misurazioni importate`;
+    document.getElementById('importStatus').textContent = `Dati dal 29 agosto 2025 al 21 maggio 2026 caricati nello Storico.`;
+    showToast(`${added} misurazioni importate!`);
+    renderDashboard();
+}
 
 // ──────────────────────────────────────────────
 // INIT
