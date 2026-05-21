@@ -9,28 +9,27 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --surface: #ffffff;
-            --bg: #f1f5f9;
-            --border: #e2e8f0;
-            --text: #1e293b;
-            --text-muted: #64748b;
-            --green: #16a34a;
-            --green-bg: #dcfce7;
-            --yellow: #ca8a04;
-            --yellow-bg: #fef9c3;
-            --orange: #ea580c;
-            --orange-bg: #ffedd5;
-            --red: #dc2626;
-            --red-bg: #fee2e2;
-            --purple: #7c3aed;
-            --purple-bg: #ede9fe;
-            --blue: #0284c7;
-            --blue-bg: #e0f2fe;
-            --radius: 12px;
-            --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
-            --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+            --primary:        #6B9FD4;
+            --primary-dark:   #4C82BA;
+            --primary-light:  #D4E8FA;
+            --surface:  #FFFFFF;
+            --bg:       #F4F8FE;
+            --bg-alt:   #EDF3FB;
+            --border:   #DCE8F5;
+            --text:       #2C3A50;
+            --text-muted: #8898B3;
+            --r-sm: 8px; --r: 14px; --r-lg: 20px; --r-xl: 28px;
+            --radius: var(--r);
+            --shadow-sm: 0 2px 10px rgba(80,120,180,.07);
+            --shadow:    0 4px 24px rgba(80,120,180,.10);
+            --shadow-md: 0 6px 32px rgba(80,120,180,.12);
+            /* semantic colors kept for JS-generated inline styles */
+            --green:  #52B788;  --green-bg:  #E6F7EF;
+            --yellow: #C9962E;  --yellow-bg: #FEF5E0;
+            --orange: #C96832;  --orange-bg: #FEF1E8;
+            --red:    #C94040;  --red-bg:    #FDEAE8;
+            --purple: #8B72CF;  --purple-bg: #EDE9FE;
+            --blue:   #5B9EC9;  --blue-bg:   #EBF5FD;
         }
 
         body {
@@ -42,26 +41,25 @@
 
         /* ── Header ── */
         header {
-            background: var(--primary);
+            background: linear-gradient(135deg, #4C82BA 0%, #6B9FD4 100%);
             color: #fff;
-            padding: 16px 20px;
+            padding: 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,.2);
+            box-shadow: 0 2px 16px rgba(74,130,186,.30);
         }
-        header h1 { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        header h1 span { font-size: 1.4rem; }
+        header h1 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .btn-add {
-            background: #fff;
-            color: var(--primary);
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: .9rem;
+            background: rgba(255,255,255,.18);
+            color: #fff;
+            border: 1.5px solid rgba(255,255,255,.45);
+            border-radius: var(--r);
+            padding: 7px 16px;
+            font-size: .88rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -69,28 +67,28 @@
             gap: 6px;
             transition: background .15s;
         }
-        .btn-add:hover { background: #e0e7ff; }
+        .btn-add:hover { background: rgba(255,255,255,.30); }
 
         /* ── Reminder banner ── */
         #reminderBanner {
             display: none;
-            background: #fef3c7;
-            border-bottom: 2px solid #f59e0b;
+            background: #FFFBEB;
+            border-bottom: 2px solid #F59E0B;
             padding: 10px 20px;
             font-size: .9rem;
-            color: #92400e;
+            color: #78350F;
             align-items: center;
             gap: 10px;
         }
         #reminderBanner.show { display: flex; }
-        #reminderBanner .icon { font-size: 1.3rem; }
+        #reminderBanner .icon { font-size: 1.2rem; }
         #reminderBanner button {
             margin-left: auto;
-            background: #f59e0b;
+            background: #F59E0B;
             color: #fff;
             border: none;
-            border-radius: 6px;
-            padding: 4px 12px;
+            border-radius: var(--r-sm);
+            padding: 5px 14px;
             font-size: .82rem;
             cursor: pointer;
         }
@@ -98,11 +96,11 @@
         /* ── Profile incomplete banner ── */
         #profileBanner {
             display: none;
-            background: #eff6ff;
-            border-bottom: 2px solid var(--primary);
+            background: var(--bg-alt);
+            border-bottom: 2px solid var(--primary-light);
             padding: 10px 20px;
             font-size: .88rem;
-            color: #1e40af;
+            color: var(--text);
             align-items: center;
             gap: 10px;
         }
@@ -112,15 +110,15 @@
             background: var(--primary);
             color: #fff;
             border: none;
-            border-radius: 6px;
-            padding: 4px 12px;
+            border-radius: var(--r-sm);
+            padding: 5px 14px;
             font-size: .82rem;
             cursor: pointer;
         }
         #profileBanner .dismiss {
             background: transparent;
-            color: #1e40af;
-            border: 1px solid #93c5fd;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
             margin-left: 6px;
         }
 
@@ -132,26 +130,41 @@
             overflow-x: auto;
         }
         .tab {
-            padding: 8px 18px;
-            border-radius: 8px 8px 0 0;
-            background: var(--border);
+            padding: 8px 16px;
+            border-radius: var(--r) var(--r) 0 0;
+            background: var(--bg-alt);
             color: var(--text-muted);
             border: none;
-            font-size: .88rem;
+            font-size: .84rem;
             font-weight: 500;
             cursor: pointer;
             white-space: nowrap;
             transition: all .15s;
+            display: flex;
+            align-items: center;
+            gap: 7px;
         }
-        .tab.active { background: var(--surface); color: var(--primary); font-weight: 700; }
+        .tab:hover { background: var(--primary-light); color: var(--primary-dark); }
+        .tab.active {
+            background: var(--surface);
+            color: var(--primary-dark);
+            font-weight: 700;
+            box-shadow: 0 -2px 0 var(--primary) inset;
+        }
 
         /* ── Main layout ── */
         main {
-            padding: 0 20px 20px;
+            padding: 0 20px 24px;
             max-width: 900px;
             margin: 0 auto;
         }
-        .tab-panel { display: none; background: var(--surface); border-radius: 0 var(--radius) var(--radius); padding: 20px; box-shadow: var(--shadow-md); }
+        .tab-panel {
+            display: none;
+            background: var(--surface);
+            border-radius: 0 var(--r-lg) var(--r-lg);
+            padding: 22px;
+            box-shadow: var(--shadow);
+        }
         .tab-panel.active { display: block; }
 
         /* ── Dashboard ── */
@@ -163,45 +176,38 @@
         }
         .stat-card {
             background: var(--bg);
-            border-radius: var(--radius);
-            padding: 16px;
-            border-left: 4px solid var(--primary);
+            border-radius: var(--r);
+            padding: 16px 18px;
+            border-left: 4px solid var(--primary-light);
         }
-        .stat-card .label { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+        .stat-card .label { font-size: .75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
         .stat-card .value { font-size: 2rem; font-weight: 700; margin: 4px 0; line-height: 1; }
-        .stat-card .sub { font-size: .82rem; color: var(--text-muted); }
+        .stat-card .sub { font-size: .8rem; color: var(--text-muted); }
 
         .last-reading {
             background: var(--bg);
-            border-radius: var(--radius);
-            padding: 20px;
+            border-radius: var(--r-lg);
+            padding: 22px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
         }
-        .bp-display {
-            font-size: 3rem;
-            font-weight: 800;
-            line-height: 1;
-        }
+        .bp-display { font-size: 3rem; font-weight: 800; line-height: 1; }
         .bp-display .sep { color: var(--text-muted); margin: 0 4px; }
         .bp-info { flex: 1; min-width: 160px; }
         .bp-info .date { font-size: .85rem; color: var(--text-muted); }
 
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--text-muted);
-        }
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
         .empty-state .icon { font-size: 3.5rem; margin-bottom: 12px; }
         .empty-state p { font-size: 1rem; margin-bottom: 16px; }
+
         .btn-primary {
             background: var(--primary);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--r);
             padding: 10px 22px;
             font-size: .95rem;
             font-weight: 600;
@@ -211,7 +217,7 @@
         .btn-primary:hover { background: var(--primary-dark); }
 
         /* ── Chart ── */
-        .chart-container { position: relative; height: 250px; margin-top: 20px; }
+        .chart-container { position: relative; height: 280px; margin-top: 20px; }
 
         /* ── History table ── */
         .table-header {
@@ -226,7 +232,7 @@
             background: var(--green);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--r);
             padding: 7px 16px;
             font-size: .85rem;
             font-weight: 600;
@@ -235,7 +241,7 @@
             align-items: center;
             gap: 6px;
         }
-        .btn-export:hover { background: #15803d; }
+        .btn-export:hover { background: #3A9E72; }
 
         table { width: 100%; border-collapse: collapse; font-size: .88rem; }
         thead th {
@@ -243,9 +249,9 @@
             padding: 8px 10px;
             background: var(--bg);
             color: var(--text-muted);
-            font-size: .78rem;
+            font-size: .74rem;
             text-transform: uppercase;
-            letter-spacing: .05em;
+            letter-spacing: .07em;
             border-bottom: 2px solid var(--border);
         }
         tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
@@ -253,40 +259,40 @@
         tbody td { padding: 10px; }
         .badge {
             display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: .78rem;
+            padding: 3px 10px;
+            border-radius: var(--r);
+            font-size: .75rem;
             font-weight: 600;
         }
         .btn-delete {
             background: none;
             border: none;
-            color: #94a3b8;
+            color: var(--text-muted);
             cursor: pointer;
-            font-size: 1.1rem;
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-size: 1rem;
+            padding: 3px 7px;
+            border-radius: var(--r-sm);
         }
         .btn-delete:hover { color: var(--red); background: var(--red-bg); }
 
-        /* ── Analysis ── */
+        /* ── Analysis alerts ── */
         .alert-box {
-            border-radius: var(--radius);
-            padding: 14px 16px;
-            margin-bottom: 14px;
+            border-radius: var(--r);
+            padding: 14px 18px;
+            margin-bottom: 12px;
             display: flex;
-            gap: 12px;
+            gap: 14px;
             align-items: flex-start;
         }
-        .alert-box .icon { font-size: 1.4rem; flex-shrink: 0; }
-        .alert-box h4 { font-size: .95rem; margin-bottom: 4px; }
-        .alert-box p { font-size: .85rem; line-height: 1.5; }
-        .alert-ok { background: var(--green-bg); color: #14532d; }
-        .alert-warn { background: var(--yellow-bg); color: #78350f; }
-        .alert-danger { background: var(--orange-bg); color: #7c2d12; }
-        .alert-critical { background: var(--red-bg); color: #7f1d1d; }
-        .alert-low { background: var(--blue-bg); color: #0c4a6e; }
-        .alert-info { background: var(--purple-bg); color: #4c1d95; }
+        .alert-box .icon { font-size: 1.3rem; flex-shrink: 0; }
+        .alert-box h4 { font-size: .93rem; margin-bottom: 4px; font-weight: 700; }
+        .alert-box p { font-size: .84rem; line-height: 1.55; }
+        .alert-ok       { background: var(--green-bg);  color: #1B5E37; }
+        .alert-warn     { background: var(--yellow-bg); color: #78350F; }
+        .alert-danger   { background: var(--orange-bg); color: #7C2D12; border-left: 4px solid var(--orange); }
+        .alert-critical { background: var(--red-bg);    color: #7F1D1D; border-left: 4px solid var(--red); }
+        .alert-low      { background: var(--blue-bg);   color: #0C4A6E; }
+        .alert-info     { background: var(--bg-alt);    color: var(--text); }
 
         .analysis-grid {
             display: grid;
@@ -294,333 +300,194 @@
             gap: 12px;
             margin: 20px 0;
         }
-        .analysis-item {
-            background: var(--bg);
-            border-radius: 10px;
-            padding: 14px;
-            text-align: center;
-        }
+        .analysis-item { background: var(--bg); border-radius: var(--r); padding: 16px; text-align: center; }
         .analysis-item .val { font-size: 1.8rem; font-weight: 700; }
-        .analysis-item .lbl { font-size: .78rem; color: var(--text-muted); margin-top: 4px; }
+        .analysis-item .lbl { font-size: .75rem; color: var(--text-muted); margin-top: 4px; }
         .analysis-item .trend { font-size: .82rem; margin-top: 6px; }
 
         .report-box {
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
+            border-radius: var(--r);
+            padding: 18px;
             margin-top: 20px;
             font-size: .88rem;
             line-height: 1.7;
+            background: var(--bg);
         }
-        .report-box h4 { margin-bottom: 10px; color: var(--text-muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+        .report-box h4 { margin-bottom: 10px; color: var(--text-muted); font-size: .76rem; text-transform: uppercase; letter-spacing: .07em; }
 
         /* ── Profile ── */
         .profile-header-card {
             display: flex;
             align-items: center;
             gap: 20px;
-            background: linear-gradient(135deg, #eff6ff, #f0fdf4);
-            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--bg-alt), var(--primary-light));
+            border-radius: var(--r-lg);
             padding: 20px;
             margin-bottom: 24px;
             flex-wrap: wrap;
         }
         .profile-avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            flex-shrink: 0;
+            width: 64px; height: 64px; border-radius: 50%;
+            background: var(--primary); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; flex-shrink: 0;
         }
         .profile-summary h2 { font-size: 1.2rem; font-weight: 700; }
         .profile-summary p { font-size: .85rem; color: var(--text-muted); margin-top: 4px; }
         .risk-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .risk-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: .75rem;
-            font-weight: 600;
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: var(--r);
+            font-size: .74rem; font-weight: 600;
         }
-        .chip-red { background: var(--red-bg); color: var(--red); }
+        .chip-red    { background: var(--red-bg);    color: var(--red); }
         .chip-orange { background: var(--orange-bg); color: var(--orange); }
         .chip-yellow { background: var(--yellow-bg); color: var(--yellow); }
-        .chip-blue { background: var(--blue-bg); color: var(--blue); }
-        .chip-gray { background: #f1f5f9; color: #64748b; }
+        .chip-blue   { background: var(--blue-bg);   color: var(--blue); }
+        .chip-gray   { background: var(--bg-alt);    color: var(--text-muted); }
 
         .profile-section { margin-bottom: 28px; }
         .profile-section h3 {
-            font-size: .85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .06em;
-            color: var(--text-muted);
-            margin-bottom: 14px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border);
+            font-size: .8rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .07em; color: var(--text-muted);
+            margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
         }
-        .profile-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
-        }
+        .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
         .profile-grid.cols3 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
         .pfield { display: flex; flex-direction: column; gap: 5px; }
-        .pfield label { font-size: .82rem; font-weight: 600; color: var(--text-muted); }
+        .pfield label { font-size: .8rem; font-weight: 600; color: var(--text-muted); }
         .pfield input, .pfield select {
-            padding: 9px 12px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: .92rem;
-            background: var(--bg);
-            color: var(--text);
-            transition: border-color .15s;
+            padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--r);
+            font-size: .92rem; background: var(--bg); color: var(--text); transition: border-color .15s;
         }
         .pfield input:focus, .pfield select:focus { outline: none; border-color: var(--primary); background: #fff; }
         .pfield.full { grid-column: 1 / -1; }
         .pfield textarea {
-            padding: 9px 12px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: .88rem;
-            background: var(--bg);
-            color: var(--text);
-            resize: vertical;
-            min-height: 70px;
-            font-family: inherit;
+            padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--r);
+            font-size: .88rem; background: var(--bg); color: var(--text);
+            resize: vertical; min-height: 70px; font-family: inherit;
         }
         .pfield textarea:focus { outline: none; border-color: var(--primary); background: #fff; }
 
         .bmi-display {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: var(--bg);
-            border-radius: 10px;
-            padding: 14px;
-            margin-top: 4px;
+            display: flex; align-items: center; gap: 14px;
+            background: var(--bg); border-radius: var(--r); padding: 14px; margin-top: 4px;
         }
         .bmi-circle {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            font-weight: 800;
-            flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 800; flex-shrink: 0;
         }
         .bmi-info .bmi-val { font-size: 1.4rem; font-weight: 700; }
         .bmi-info .bmi-cat { font-size: .8rem; margin-top: 2px; }
 
-        .conditions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
+        .conditions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
         .condition-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all .15s;
-            font-size: .88rem;
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--r);
+            cursor: pointer; transition: all .15s; font-size: .88rem;
         }
-        .condition-item:hover { border-color: var(--primary); background: #eff6ff; }
+        .condition-item:hover { border-color: var(--primary); background: var(--bg-alt); }
         .condition-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
-        .condition-item.checked { border-color: var(--primary); background: #eff6ff; }
+        .condition-item.checked { border-color: var(--primary); background: var(--bg-alt); }
 
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 0;
-        }
+        .toggle-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; }
         .toggle-label { font-size: .9rem; flex: 1; }
-        .toggle {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            flex-shrink: 0;
-        }
+        .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
         .toggle input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
-            position: absolute;
-            inset: 0;
-            background: #cbd5e1;
-            border-radius: 24px;
-            cursor: pointer;
-            transition: background .2s;
+            position: absolute; inset: 0; background: var(--border);
+            border-radius: 24px; cursor: pointer; transition: background .2s;
         }
         .toggle-slider::before {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            left: 3px;
-            top: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform .2s;
+            content: ''; position: absolute; width: 18px; height: 18px;
+            left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .2s;
         }
         .toggle input:checked + .toggle-slider { background: var(--primary); }
         .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
 
         /* ── Settings ── */
         .settings-section { margin-bottom: 24px; }
-        .settings-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .settings-section h3 { font-size: .95rem; font-weight: 600; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: .85rem; font-weight: 500; margin-bottom: 6px; }
         .form-group select, .form-group input[type="text"], .form-group input[type="email"] {
-            width: 100%;
-            padding: 9px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: .9rem;
-            background: var(--bg);
-            color: var(--text);
+            width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--r);
+            font-size: .9rem; background: var(--bg); color: var(--text);
         }
-        .form-group select:focus, .form-group input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+        .form-group select:focus, .form-group input:focus { outline: 2px solid var(--primary-light); border-color: var(--primary); }
         .btn-save {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 9px 20px;
-            font-size: .9rem;
-            font-weight: 600;
-            cursor: pointer;
+            background: var(--primary); color: #fff; border: none; border-radius: var(--r);
+            padding: 9px 20px; font-size: .9rem; font-weight: 600; cursor: pointer;
         }
         .btn-save:hover { background: var(--primary-dark); }
         .btn-danger {
-            background: var(--red);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 9px 20px;
-            font-size: .9rem;
-            font-weight: 600;
-            cursor: pointer;
+            background: var(--red); color: #fff; border: none; border-radius: var(--r);
+            padding: 9px 20px; font-size: .9rem; font-weight: 600; cursor: pointer;
         }
-        .btn-danger:hover { background: #b91c1c; }
+        .btn-danger:hover { background: #A03030; }
         .future-badge {
-            display: inline-block;
-            background: var(--purple-bg);
-            color: var(--purple);
-            font-size: .72rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 10px;
-            vertical-align: middle;
-            margin-left: 6px;
+            display: inline-block; background: var(--bg-alt); color: var(--text-muted);
+            font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+            vertical-align: middle; margin-left: 6px; border: 1px solid var(--border);
         }
         .future-section {
-            background: var(--bg);
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: .9rem;
+            background: var(--bg); border: 2px dashed var(--border); border-radius: var(--r);
+            padding: 20px; text-align: center; color: var(--text-muted); font-size: .9rem;
         }
         .future-section .fi { font-size: 2rem; margin-bottom: 8px; }
 
         /* ── Modal ── */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.5);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: none; position: fixed; inset: 0;
+            background: rgba(44,58,80,.45); z-index: 200;
+            align-items: center; justify-content: center; padding: 20px;
+            backdrop-filter: blur(2px);
         }
         .modal-overlay.open { display: flex; }
         .modal {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 24px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 20px 60px rgba(0,0,0,.3);
+            background: var(--surface); border-radius: var(--r-xl); padding: 26px;
+            width: 100%; max-width: 480px;
+            box-shadow: 0 24px 64px rgba(44,58,80,.25);
             animation: slideUp .2s ease;
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal h2 { font-size: 1.15rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .modal h2 { font-size: 1.1rem; margin-bottom: 20px; display: flex; align-items: center; gap: 9px; }
         .modal-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .modal-fields .full { grid-column: 1 / -1; }
-        .field label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: 5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+        .field label { display: block; font-size: .76rem; font-weight: 700; margin-bottom: 5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
         .field input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-align: center;
-            color: var(--text);
-            background: var(--bg);
-            transition: border-color .15s;
+            width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: var(--r);
+            font-size: 1.1rem; font-weight: 600; text-align: center;
+            color: var(--text); background: var(--bg); transition: border-color .15s;
         }
         .field input:focus { outline: none; border-color: var(--primary); background: #fff; }
         .field input[type="text"] { text-align: left; font-size: .9rem; font-weight: 400; }
         .field input[type="datetime-local"] { text-align: left; font-size: .88rem; font-weight: 400; }
-        .bp-preview {
-            background: var(--bg);
-            border-radius: 10px;
-            padding: 12px;
-            margin: 16px 0;
-            text-align: center;
-        }
+        .bp-preview { background: var(--bg); border-radius: var(--r); padding: 14px; margin: 16px 0; text-align: center; }
         .bp-preview .preview-val { font-size: 2rem; font-weight: 800; }
         .bp-preview .preview-cat { font-size: .85rem; margin-top: 4px; font-weight: 600; }
         .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
         .btn-cancel {
-            background: var(--bg);
-            color: var(--text);
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: .9rem;
-            cursor: pointer;
+            background: var(--bg); color: var(--text); border: 1.5px solid var(--border);
+            border-radius: var(--r); padding: 10px 20px; font-size: .9rem; cursor: pointer;
         }
-        .btn-cancel:hover { background: var(--border); }
+        .btn-cancel:hover { background: var(--bg-alt); }
 
         /* ── Legend ── */
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 16px;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: .78rem;
-            color: var(--text-muted);
-        }
-        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: var(--text-muted); }
+        .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
         /* ── Responsive ── */
         @media (max-width: 500px) {
-            header h1 { font-size: 1rem; }
+            header h1 { font-size: .95rem; }
             .bp-display { font-size: 2.2rem; }
             .modal-fields { grid-template-columns: 1fr; }
             .modal-fields .full { grid-column: 1; }
             .profile-grid { grid-template-columns: 1fr; }
+            .tab { padding: 7px 12px; font-size: .8rem; }
         }
     </style>
 </head>
@@ -628,13 +495,23 @@
 
 <!-- Header -->
 <header>
-    <h1><span>❤️</span> Monitor Pressione</h1>
-    <button class="btn-add" onclick="openModal()">+ Nuova misura</button>
+    <h1>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="white" style="flex-shrink:0">
+            <path d="M9 15.5C9 15.5 2 10.8 2 6a4 4 0 0 1 7-2.65A4 4 0 0 1 16 6c0 4.8-7 9.5-7 9.5Z"/>
+        </svg>
+        Monitor Pressione
+    </h1>
+    <button class="btn-add" onclick="openModal()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6.75 1.5a.75.75 0 0 0-1.5 0v3.75H1.5a.75.75 0 0 0 0 1.5h3.75v3.75a.75.75 0 0 0 1.5 0V6.75h3.75a.75.75 0 0 0 0-1.5H6.75V1.5Z"/></svg>
+        Nuova misura
+    </button>
 </header>
 
 <!-- Profile incomplete banner -->
 <div id="profileBanner">
-    <span>👤</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0;color:var(--text-muted)">
+        <circle cx="8" cy="5" r="3"/><path d="M2 15c0-3.31 2.69-6 6-6s6 2.69 6 6"/>
+    </svg>
     <span>Completa il tuo profilo per ottenere un'analisi personalizzata.</span>
     <button onclick="goToProfile()">Compila ora</button>
     <button class="dismiss" onclick="document.getElementById('profileBanner').classList.remove('show')">✕</button>
@@ -645,16 +522,47 @@
     <span class="icon">⏰</span>
     <span id="reminderText"></span>
     <button onclick="openModal(); dismissReminder()">Registra ora</button>
-    <button onclick="dismissReminder()" style="background:#d97706; margin-left:6px;">Più tardi</button>
+    <button onclick="dismissReminder()" style="background:#D97706; margin-left:6px;">Più tardi</button>
 </div>
 
 <!-- Tabs -->
 <div class="tabs" style="max-width:900px; margin:0 auto;">
-    <button class="tab active" onclick="switchTab('dashboard', this)">📊 Dashboard</button>
-    <button class="tab" onclick="switchTab('profile', this)">👤 Profilo</button>
-    <button class="tab" onclick="switchTab('history', this)">📋 Storico</button>
-    <button class="tab" onclick="switchTab('analysis', this)">🔬 Analisi</button>
-    <button class="tab" onclick="switchTab('settings', this)">⚙️ Impostazioni</button>
+    <button class="tab active" onclick="switchTab('dashboard', this)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+            <rect x="0" y="0" width="6" height="6" rx="1.5"/>
+            <rect x="8" y="0" width="6" height="6" rx="1.5"/>
+            <rect x="0" y="8" width="6" height="6" rx="1.5"/>
+            <rect x="8" y="8" width="6" height="6" rx="1.5"/>
+        </svg>
+        Dashboard
+    </button>
+    <button class="tab" onclick="switchTab('profile', this)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="7" cy="4" r="2.5"/><path d="M2 13c0-2.76 2.24-5 5-5s5 2.24 5 5"/>
+        </svg>
+        Profilo
+    </button>
+    <button class="tab" onclick="switchTab('history', this)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <line x1="2" y1="3.5" x2="12" y2="3.5"/>
+            <line x1="2" y1="7" x2="12" y2="7"/>
+            <line x1="2" y1="10.5" x2="8" y2="10.5"/>
+        </svg>
+        Storico
+    </button>
+    <button class="tab" onclick="switchTab('analysis', this)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1,11 4,7 7,9 10,4 13,6"/>
+        </svg>
+        Analisi
+    </button>
+    <button class="tab" onclick="switchTab('settings', this)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="7" cy="7" r="2"/>
+            <path d="M7 1v1.5M7 11.5V13M13 7h-1.5M2.5 7H1M11.2 2.8l-1.06 1.06M3.86 10.14l-1.06 1.06M11.2 11.2l-1.06-1.06M3.86 3.86L2.8 2.8"/>
+        </svg>
+        Impostazioni
+    </button>
 </div>
 
 <main>
@@ -714,24 +622,15 @@
             <h3>Stile di vita</h3>
             <div class="toggle-row">
                 <span class="toggle-label">🚬 Fumatore / Ex-fumatore</span>
-                <label class="toggle">
-                    <input type="checkbox" id="pFumatore">
-                    <span class="toggle-slider"></span>
-                </label>
+                <label class="toggle"><input type="checkbox" id="pFumatore"><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
                 <span class="toggle-label">🍷 Consumo regolare di alcol</span>
-                <label class="toggle">
-                    <input type="checkbox" id="pAlcol">
-                    <span class="toggle-slider"></span>
-                </label>
+                <label class="toggle"><input type="checkbox" id="pAlcol"><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
                 <span class="toggle-label">🏃 Attività fisica regolare (≥ 3 volte/settimana)</span>
-                <label class="toggle">
-                    <input type="checkbox" id="pSport">
-                    <span class="toggle-slider"></span>
-                </label>
+                <label class="toggle"><input type="checkbox" id="pSport"><span class="toggle-slider"></span></label>
             </div>
         </div>
 
@@ -782,7 +681,7 @@
         </div>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn-primary" onclick="saveProfile()">💾 Salva profilo</button>
+            <button class="btn-primary" onclick="saveProfile()">Salva profilo</button>
             <button class="btn-cancel" onclick="renderProfileHeader()">Annulla</button>
         </div>
 
@@ -792,7 +691,12 @@
     <div id="tab-history" class="tab-panel">
         <div class="table-header">
             <strong>Tutte le misurazioni</strong>
-            <button class="btn-export" onclick="exportCSV()">📥 Esporta CSV</button>
+            <button class="btn-export" onclick="exportCSV()">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6.5 1v7M4 6l2.5 2.5L9 6"/><path d="M2 10h9"/>
+                </svg>
+                Esporta CSV
+            </button>
         </div>
         <div id="historyContent"></div>
     </div>
@@ -835,12 +739,12 @@
             <h3>Dati</h3>
             <div class="form-group">
                 <label>Importa dati storici</label>
-                <button class="btn-primary" onclick="importHistoricalData()" id="importBtn">📥 Carica 94 misurazioni storiche</button>
+                <button class="btn-primary" onclick="importHistoricalData()" id="importBtn">Carica 94 misurazioni storiche</button>
                 <div id="importStatus" style="margin-top:8px;font-size:.85rem;color:var(--text-muted);"></div>
             </div>
             <div class="form-group" style="margin-top:16px;">
                 <label>Gestione dati locali</label>
-                <button class="btn-danger" onclick="clearAllData()">🗑️ Elimina tutti i dati</button>
+                <button class="btn-danger" onclick="clearAllData()">Elimina tutti i dati</button>
             </div>
         </div>
 
@@ -854,7 +758,12 @@
 <!-- Add Measurement Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
     <div class="modal">
-        <h2>❤️ Nuova misurazione</h2>
+        <h2>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round">
+                <path d="M9 15.5C9 15.5 2 10.8 2 6a4 4 0 0 1 7-2.65A4 4 0 0 1 16 6c0 4.8-7 9.5-7 9.5Z"/>
+            </svg>
+            Nuova misurazione
+        </h2>
         <div class="modal-fields">
             <div class="field">
                 <label>Sistolica (MAX)</label>
@@ -883,7 +792,7 @@
         </div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeModal()">Annulla</button>
-            <button class="btn-primary" onclick="saveMeasurement()">💾 Salva</button>
+            <button class="btn-primary" onclick="saveMeasurement()">Salva</button>
         </div>
     </div>
 </div>
@@ -920,18 +829,18 @@ function storeProfile(p) {
 }
 
 // ──────────────────────────────────────────────
-// BP CLASSIFICATION (ESH 2023)
+// BP CLASSIFICATION (ESH 2023) — hex colors for Canvas compatibility
 // ──────────────────────────────────────────────
 function classify(sys, dia) {
     if (!sys || !dia) return null;
     sys = +sys; dia = +dia;
-    if (sys < 90 || dia < 60)        return { label: 'Ipotensione',          color: 'var(--blue)',   bg: 'var(--blue-bg)',   level: 0 };
-    if (sys < 120 && dia < 80)       return { label: 'Ottimale',             color: 'var(--green)',  bg: 'var(--green-bg)',  level: 1 };
-    if (sys < 130 && dia < 85)       return { label: 'Normale',              color: 'var(--green)',  bg: 'var(--green-bg)',  level: 2 };
-    if (sys < 140 && dia < 90)       return { label: 'Alta normale',         color: 'var(--yellow)', bg: 'var(--yellow-bg)', level: 3 };
-    if (sys < 160 && dia < 100)      return { label: 'Ipertensione Grado 1', color: 'var(--orange)', bg: 'var(--orange-bg)', level: 4 };
-    if (sys < 180 && dia < 110)      return { label: 'Ipertensione Grado 2', color: 'var(--red)',    bg: 'var(--red-bg)',    level: 5 };
-    if (sys >= 180 || dia >= 110)    return { label: 'Ipertensione Grado 3', color: 'var(--purple)', bg: 'var(--purple-bg)', level: 6 };
+    if (sys < 90  || dia < 60)    return { label: 'Ipotensione',          color: '#5B9EC9', bg: '#EBF5FD', level: 0 };
+    if (sys < 120 && dia < 80)    return { label: 'Ottimale',             color: '#52B788', bg: '#E6F7EF', level: 1 };
+    if (sys < 130 && dia < 85)    return { label: 'Normale',              color: '#52B788', bg: '#E6F7EF', level: 2 };
+    if (sys < 140 && dia < 90)    return { label: 'Alta normale',         color: '#C9962E', bg: '#FEF5E0', level: 3 };
+    if (sys < 160 && dia < 100)   return { label: 'Ipertensione Grado 1', color: '#C96832', bg: '#FEF1E8', level: 4 };
+    if (sys < 180 && dia < 110)   return { label: 'Ipertensione Grado 2', color: '#C94040', bg: '#FDEAE8', level: 5 };
+    if (sys >= 180 || dia >= 110) return { label: 'Ipertensione Grado 3', color: '#A01010', bg: '#FEE2E2', level: 6 };
     return null;
 }
 
@@ -961,11 +870,11 @@ function calcBMI(peso, altezza) {
 
 function bmiCategory(bmi) {
     if (!bmi) return null;
-    if (bmi < 18.5) return { label: 'Sottopeso',  color: '#0284c7', bg: '#e0f2fe' };
-    if (bmi < 25)   return { label: 'Normopeso',  color: '#16a34a', bg: '#dcfce7' };
-    if (bmi < 30)   return { label: 'Sovrappeso', color: '#ca8a04', bg: '#fef9c3' };
-    if (bmi < 35)   return { label: 'Obesità G1', color: '#ea580c', bg: '#ffedd5' };
-    return              { label: 'Obesità G2+', color: '#dc2626', bg: '#fee2e2' };
+    if (bmi < 18.5) return { label: 'Sottopeso',  color: '#5B9EC9', bg: '#EBF5FD' };
+    if (bmi < 25)   return { label: 'Normopeso',  color: '#52B788', bg: '#E6F7EF' };
+    if (bmi < 30)   return { label: 'Sovrappeso', color: '#C9962E', bg: '#FEF5E0' };
+    if (bmi < 35)   return { label: 'Obesità G1', color: '#C96832', bg: '#FEF1E8' };
+    return              { label: 'Obesità G2+', color: '#C94040', bg: '#FDEAE8' };
 }
 
 function profileIsComplete(p) {
@@ -1179,7 +1088,7 @@ function showToast(msg) {
     if (!t) {
         t = document.createElement('div');
         t.id = 'toast';
-        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 22px;border-radius:24px;font-size:.9rem;z-index:999;transition:opacity .3s;';
+        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2C3A50;color:#fff;padding:10px 22px;border-radius:24px;font-size:.9rem;z-index:999;transition:opacity .3s;';
         document.body.appendChild(t);
     }
     t.textContent = msg;
@@ -1222,7 +1131,7 @@ function renderDashboard() {
         ${greeting}
         <div class="last-reading">
             <div>
-                <div style="font-size:.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Ultima misurazione</div>
+                <div style="font-size:.76rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Ultima misurazione</div>
                 <div class="bp-display" style="color:${lastCat ? lastCat.color : 'var(--text)'}">
                     ${last.sys}<span class="sep">/</span>${last.dia}
                     <span style="font-size:1.4rem;color:var(--text-muted);font-weight:500"> mmHg</span>
@@ -1250,53 +1159,120 @@ function renderDashboard() {
             </div>
             <div class="stat-card">
                 <div class="label">Massima sistolica</div>
-                <div class="value" style="color:var(--red)">${maxSys}</div>
+                <div class="value" style="color:#C94040">${maxSys}</div>
                 <div class="sub">Ultimi ${recent10.length} valori</div>
             </div>
             <div class="stat-card">
                 <div class="label">Minima sistolica</div>
-                <div class="value" style="color:var(--blue)">${minSys}</div>
+                <div class="value" style="color:#5B9EC9">${minSys}</div>
                 <div class="sub">Ultimi ${recent10.length} valori</div>
             </div>
         </div>
 
         <div>
-            <div style="font-weight:600;margin-bottom:8px;font-size:.9rem;">Andamento ultimi ${Math.min(records.length, 14)} valori</div>
+            <div style="font-weight:600;margin-bottom:8px;font-size:.88rem;color:var(--text-muted);">Andamento ultimi ${Math.min(records.length, 14)} valori</div>
             <div class="chart-container"><canvas id="dashChartCanvas"></canvas></div>
         </div>
 
         <div class="legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div>Ottimale/Normale &lt;130/85</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#ca8a04"></div>Alta normale 130-139/85-89</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#ea580c"></div>Ipertensione G1 140-159/90-99</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Ipertensione G2+ ≥160/≥100</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#52B788"></div>Ottimale/Normale &lt;130/85</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#C9962E"></div>Alta normale 130–139</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#C96832"></div>Ipertensione G1 140–159</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#C94040"></div>Ipertensione G2+ ≥160</div>
         </div>
     `;
 
     const chartData   = records.slice(0, 14).reverse();
-    const labels      = chartData.map(r => formatDateShort(r.date));
+    const labels      = chartData.map(r => formatDateChart(r.date));
     const sysData     = chartData.map(r => r.sys);
     const diaData     = chartData.map(r => r.dia);
-    const pointColors = chartData.map(r => { const c = classify(r.sys, r.dia); return c ? c.color : '#94a3b8'; });
+    const n           = chartData.length;
+    const pointColors = chartData.map(r => { const c = classify(r.sys, r.dia); return c ? c.color : '#8898B3'; });
 
     if (dashChart) { dashChart.destroy(); dashChart = null; }
     const ctx = document.getElementById('dashChartCanvas').getContext('2d');
+
+    const gradSys = ctx.createLinearGradient(0, 0, 0, 280);
+    gradSys.addColorStop(0, 'rgba(107,159,212,0.22)');
+    gradSys.addColorStop(1, 'rgba(107,159,212,0.01)');
+    const gradDia = ctx.createLinearGradient(0, 0, 0, 280);
+    gradDia.addColorStop(0, 'rgba(139,114,207,0.14)');
+    gradDia.addColorStop(1, 'rgba(139,114,207,0.01)');
+
     dashChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels,
             datasets: [
-                { label: 'Sistolica', data: sysData, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)', tension: .35, fill: false, pointBackgroundColor: pointColors, pointRadius: 5, pointHoverRadius: 7 },
-                { label: 'Diastolica', data: diaData, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,.06)', tension: .35, fill: false, pointBackgroundColor: pointColors, pointRadius: 4, pointHoverRadius: 6, borderDash: [5, 3] }
+                {
+                    label: '',
+                    data: Array(n).fill(140),
+                    borderColor: 'rgba(201,64,64,0.28)',
+                    borderWidth: 1.5,
+                    borderDash: [8, 5],
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0
+                },
+                {
+                    label: 'Sistolica',
+                    data: sysData,
+                    borderColor: '#6B9FD4',
+                    backgroundColor: gradSys,
+                    borderWidth: 2.5,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: pointColors,
+                    pointRadius: 5,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: 'Diastolica',
+                    data: diaData,
+                    borderColor: '#8B72CF',
+                    backgroundColor: gradDia,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: pointColors,
+                    pointRadius: 4,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1.5,
+                    pointHoverRadius: 6,
+                    borderDash: [6, 3]
+                }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'top', labels: { font: { size: 12 }, usePointStyle: true } } },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: { size: 12 },
+                        usePointStyle: true,
+                        filter: item => item.text !== ''
+                    }
+                }
+            },
             scales: {
-                y: { min: 50, grid: { color: '#e2e8f0' }, ticks: { font: { size: 11 } } },
-                x: { grid: { display: false }, ticks: { font: { size: 11 }, maxRotation: 45 } }
+                y: {
+                    min: 50,
+                    grid: { color: '#DCE8F5' },
+                    ticks: { font: { size: 11 }, color: '#8898B3' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        font: { size: 11 },
+                        color: '#8898B3',
+                        maxRotation: 45,
+                        maxTicksLimit: 10
+                    }
+                }
             }
         }
     });
@@ -1321,7 +1297,11 @@ function renderHistory() {
             <td>${r.pulse ? r.pulse + ' bpm' : '—'}</td>
             <td>${badgeHtml(r.sys, r.dia)}</td>
             <td style="color:var(--text-muted);font-size:.82rem;">${escHtml(r.note) || '—'}</td>
-            <td><button class="btn-delete" onclick="deleteRecord(${r.id})" title="Elimina">🗑️</button></td>
+            <td><button class="btn-delete" onclick="deleteRecord(${r.id})" title="Elimina">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <path d="M2 3.5h10M5.5 3.5V2.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1M6 6.5v3M8 6.5v3M3 3.5l.7 7.5a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.7-7.5"/>
+                </svg>
+            </button></td>
         </tr>
     `).join('');
 
@@ -1365,7 +1345,6 @@ function renderAnalysis() {
     const maxSys   = Math.max(...last10.map(r => r.sys));
     const minSys   = Math.min(...last10.map(r => r.sys));
 
-    // Trend
     const half         = Math.ceil(last10.length / 2);
     const recentHalf   = last10.slice(0, half);
     const olderHalf    = last10.slice(half);
@@ -1373,43 +1352,36 @@ function renderAnalysis() {
     const olderAvgSys  = olderHalf.length > 0 ? olderHalf.reduce((a, r) => a + r.sys, 0) / olderHalf.length : recentAvgSys;
     const diff         = recentAvgSys - olderAvgSys;
     let trendIcon, trendText, trendColor;
-    if (Math.abs(diff) < 3)   { trendIcon = '→'; trendText = 'Stabile';    trendColor = 'var(--text-muted)'; }
-    else if (diff > 0)         { trendIcon = '↗'; trendText = 'In aumento'; trendColor = 'var(--red)'; }
-    else                       { trendIcon = '↘'; trendText = 'In calo';    trendColor = 'var(--green)'; }
+    if (Math.abs(diff) < 3)   { trendIcon = '→'; trendText = 'Stabile';    trendColor = '#8898B3'; }
+    else if (diff > 0)         { trendIcon = '↗'; trendText = 'In aumento'; trendColor = '#C94040'; }
+    else                       { trendIcon = '↘'; trendText = 'In calo';    trendColor = '#52B788'; }
 
-    // Soglie personalizzate: pazienti ad alto rischio (diabete, rene, cuore, ictus) → 130/80
-    const highRisk      = p.diabete || p.rene || p.cuore || p.ictus;
-    const alertThSys    = highRisk ? 130 : 140;
-    const alertThDia    = highRisk ? 80  : 90;
+    const highRisk   = p.diabete || p.rene || p.cuore || p.ictus;
+    const alertThSys = highRisk ? 130 : 140;
+    const alertThDia = highRisk ? 80  : 90;
 
     const criticals = last10.filter(r => {
         const c = classify(r.sys, r.dia);
         return c && (highRisk ? c.level >= 3 : c.level >= 4);
     });
-    const grade3    = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level >= 6; });
-    const hypo      = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level === 0; });
+    const grade3 = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level >= 6; });
+    const hypo   = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level === 0; });
 
-    // Profilo biometrico
     const age  = calcAge(p.nascita);
     const bmi  = calcBMI(p.peso, p.altezza);
     const bmiC = bmiCategory(bmi);
 
-    // Build alerts
     let alerts = '';
 
-    // Profilo incompleto → invita a completare
     if (!profileIsComplete(p)) {
         alerts += alertBox('info', '👤', 'Profilo non completo',
             `Compila il <strong>tab Profilo</strong> con età, peso, altezza e condizioni mediche per ottenere un'analisi personalizzata. Senza questi dati le soglie usate sono quelle generali (≥140/90).`);
     }
-
-    // Soglie personalizzate attive
     if (highRisk && profileIsComplete(p)) {
         const conds = [p.diabete && 'diabete', p.rene && 'malattia renale', p.cuore && 'malattia cardiovascolare', p.ictus && 'ictus/TIA'].filter(Boolean).join(', ');
         alerts += alertBox('info', '⚕️', `Soglie personalizzate attive (${alertThSys}/${alertThDia} mmHg)`,
             `Per la presenza di <strong>${conds}</strong>, le linee guida ESH 2023 raccomandano un obiettivo pressorio &lt;${alertThSys}/${alertThDia} mmHg. L'analisi usa questi valori come riferimento.`);
     }
-
     if (grade3.length > 0) {
         alerts += alertBox('critical', '🚨', 'ATTENZIONE: Ipertensione di Grado 3 rilevata',
             `Hai ${grade3.length} misurazione/i con pressione ≥ 180/110 mmHg. È consigliabile contattare il medico il prima possibile.`);
@@ -1430,8 +1402,6 @@ function renderAnalysis() {
         alerts += alertBox('warn', '📊', 'Media superiore al target',
             `La tua media (${avgSys}/${avgDia} mmHg) supera il target ${alertThSys}/${alertThDia} mmHg${highRisk ? ' (personalizzato)' : ' ottimale'}. Discutine con il medico.`);
     }
-
-    // Alert biometrici dal profilo
     if (bmi && bmi >= 30) {
         alerts += alertBox('warn', '⚖️', 'Peso corporeo: fattore di rischio',
             `Il tuo BMI è ${bmi} (${bmiC.label}). L'obesità è uno dei principali fattori di rischio per l'ipertensione. Anche una riduzione del 5-10% del peso può abbassare sensibilmente la pressione.`);
@@ -1451,14 +1421,12 @@ function renderAnalysis() {
         alerts += alertBox('info', '🏃', 'Attività fisica',
             `L'esercizio aerobico regolare (es. 30 min di camminata 5 volte/settimana) può ridurre la pressione sistolica di 5-8 mmHg. Se non sei ancora attivo, valuta di iniziare.`);
     }
-
     if (!alerts) {
         const avgCat = classify(Math.round(avgSys), Math.round(avgDia));
         alerts = alertBox('ok', '✅', 'Valori nella norma',
             `I tuoi ultimi ${last10.length} valori mostrano una pressione mediamente ${avgCat ? avgCat.label.toLowerCase() : 'nella norma'}. Continua a monitorare regolarmente.`);
     }
 
-    // Report per il medico
     const profileLine = profileIsComplete(p)
         ? `Paziente: ${p.nome} | ${age ? age + ' anni' : ''} | ${p.sesso === 'M' ? 'M' : 'F'} | Altezza: ${p.altezza} cm | Peso: ${p.peso} kg | BMI: ${bmi}\n` +
           `Condizioni: ${[p.diabete && 'diabete', p.rene && 'malattia renale', p.cuore && 'malattia cardiovascolare', p.colest && 'ipercolesterolemia', p.ictus && 'ictus/TIA', p.apnee && 'apnee notturne'].filter(Boolean).join(', ') || 'nessuna'}\n` +
@@ -1482,7 +1450,7 @@ function renderAnalysis() {
                 <div class="lbl">Media sistolica</div>
             </div>
             <div class="analysis-item">
-                <div class="val" style="color:var(--purple)">${avgDia}</div>
+                <div class="val" style="color:#8B72CF">${avgDia}</div>
                 <div class="lbl">Media diastolica</div>
             </div>
             <div class="analysis-item">
@@ -1498,7 +1466,7 @@ function renderAnalysis() {
                 <div class="val" style="color:var(--text-muted)">${minSys}</div>
                 <div class="lbl">Minima sistolica</div>
             </div>
-            ${avgPulse ? `<div class="analysis-item"><div class="val" style="color:var(--red)">💓 ${avgPulse}</div><div class="lbl">Media polso (bpm)</div></div>` : ''}
+            ${avgPulse ? `<div class="analysis-item"><div class="val" style="color:#C94040">💓 ${avgPulse}</div><div class="lbl">Media polso (bpm)</div></div>` : ''}
             ${bmi ? `<div class="analysis-item"><div class="val" style="color:${bmiC.color}">${bmi}</div><div class="lbl">BMI</div><div class="trend" style="color:${bmiC.color}">${bmiC.label}</div></div>` : ''}
             ${age ? `<div class="analysis-item"><div class="val" style="color:var(--text-muted)">${age}</div><div class="lbl">Età</div></div>` : ''}
         </div>
@@ -1511,8 +1479,8 @@ Media: ${avgSys}/${avgDia} mmHg | Tendenza: ${trendText}
 ${avgPulse ? 'Polso medio: ' + avgPulse + ' bpm\n' : ''}
 ${reportLines.join('\n')}</div>
             <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-                <button class="btn-export" onclick="copyReport()">📋 Copia testo</button>
-                <button class="btn-export" onclick="exportCSV()">📥 Esporta CSV</button>
+                <button class="btn-export" onclick="copyReport()">Copia testo</button>
+                <button class="btn-export" onclick="exportCSV()">Esporta CSV</button>
             </div>
         </div>
     `;
@@ -1651,6 +1619,12 @@ function formatDateShort(iso) {
     return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }) +
         ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 }
+function formatDateChart(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const mm = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+    return d.getDate() + ' ' + mm[d.getMonth()];
+}
 function escHtml(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -1775,10 +1749,9 @@ const HISTORICAL_DATA = [
 ];
 
 function importHistoricalData() {
-    const existing  = getRecords();
+    const existing   = getRecords();
     const existDates = new Set(existing.map(r => r.date));
 
-    let added = 0;
     const toAdd = HISTORICAL_DATA
         .filter(h => !existDates.has(h.date))
         .map((h, i) => ({ id: Date.now() - (HISTORICAL_DATA.length - i) * 1000, ...h }));
@@ -1792,7 +1765,7 @@ function importHistoricalData() {
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     saveRecords(merged);
-    added = toAdd.length;
+    const added = toAdd.length;
 
     document.getElementById('importBtn').disabled = true;
     document.getElementById('importBtn').textContent = `✅ ${added} misurazioni importate`;
@@ -1807,7 +1780,6 @@ function importHistoricalData() {
 renderDashboard();
 checkReminder();
 
-// Mostra banner profilo se non completato (solo dopo 1 misura)
 const _records = getRecords();
 const _profile = getProfile();
 if (_records.length >= 1 && !profileIsComplete(_profile)) {
