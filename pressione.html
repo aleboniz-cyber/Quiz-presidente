@@ -95,6 +95,35 @@
             cursor: pointer;
         }
 
+        /* ── Profile incomplete banner ── */
+        #profileBanner {
+            display: none;
+            background: #eff6ff;
+            border-bottom: 2px solid var(--primary);
+            padding: 10px 20px;
+            font-size: .88rem;
+            color: #1e40af;
+            align-items: center;
+            gap: 10px;
+        }
+        #profileBanner.show { display: flex; }
+        #profileBanner button {
+            margin-left: auto;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: .82rem;
+            cursor: pointer;
+        }
+        #profileBanner .dismiss {
+            background: transparent;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+            margin-left: 6px;
+        }
+
         /* ── Tabs ── */
         .tabs {
             display: flex;
@@ -160,7 +189,6 @@
         .bp-display .sep { color: var(--text-muted); margin: 0 4px; }
         .bp-info { flex: 1; min-width: 160px; }
         .bp-info .date { font-size: .85rem; color: var(--text-muted); }
-        .bp-info .category { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: .82rem; font-weight: 600; margin-top: 6px; }
 
         .empty-state {
             text-align: center;
@@ -258,6 +286,7 @@
         .alert-danger { background: var(--orange-bg); color: #7c2d12; }
         .alert-critical { background: var(--red-bg); color: #7f1d1d; }
         .alert-low { background: var(--blue-bg); color: #0c4a6e; }
+        .alert-info { background: var(--purple-bg); color: #4c1d95; }
 
         .analysis-grid {
             display: grid;
@@ -284,6 +313,169 @@
             line-height: 1.7;
         }
         .report-box h4 { margin-bottom: 10px; color: var(--text-muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+
+        /* ── Profile ── */
+        .profile-header-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        .profile-summary h2 { font-size: 1.2rem; font-weight: 700; }
+        .profile-summary p { font-size: .85rem; color: var(--text-muted); margin-top: 4px; }
+        .risk-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .risk-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+        .chip-red { background: var(--red-bg); color: var(--red); }
+        .chip-orange { background: var(--orange-bg); color: var(--orange); }
+        .chip-yellow { background: var(--yellow-bg); color: var(--yellow); }
+        .chip-blue { background: var(--blue-bg); color: var(--blue); }
+        .chip-gray { background: #f1f5f9; color: #64748b; }
+
+        .profile-section { margin-bottom: 28px; }
+        .profile-section h3 {
+            font-size: .85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+        }
+        .profile-grid.cols3 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+        .pfield { display: flex; flex-direction: column; gap: 5px; }
+        .pfield label { font-size: .82rem; font-weight: 600; color: var(--text-muted); }
+        .pfield input, .pfield select {
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: .92rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: border-color .15s;
+        }
+        .pfield input:focus, .pfield select:focus { outline: none; border-color: var(--primary); background: #fff; }
+        .pfield.full { grid-column: 1 / -1; }
+        .pfield textarea {
+            padding: 9px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: .88rem;
+            background: var(--bg);
+            color: var(--text);
+            resize: vertical;
+            min-height: 70px;
+            font-family: inherit;
+        }
+        .pfield textarea:focus { outline: none; border-color: var(--primary); background: #fff; }
+
+        .bmi-display {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 4px;
+        }
+        .bmi-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .bmi-info .bmi-val { font-size: 1.4rem; font-weight: 700; }
+        .bmi-info .bmi-cat { font-size: .8rem; margin-top: 2px; }
+
+        .conditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .condition-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .15s;
+            font-size: .88rem;
+        }
+        .condition-item:hover { border-color: var(--primary); background: #eff6ff; }
+        .condition-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+        .condition-item.checked { border-color: var(--primary); background: #eff6ff; }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 0;
+        }
+        .toggle-label { font-size: .9rem; flex: 1; }
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: #cbd5e1;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 3px;
+            top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform .2s;
+        }
+        .toggle input:checked + .toggle-slider { background: var(--primary); }
+        .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
 
         /* ── Settings ── */
         .settings-section { margin-bottom: 24px; }
@@ -428,6 +620,7 @@
             .bp-display { font-size: 2.2rem; }
             .modal-fields { grid-template-columns: 1fr; }
             .modal-fields .full { grid-column: 1; }
+            .profile-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -438,6 +631,14 @@
     <h1><span>❤️</span> Monitor Pressione</h1>
     <button class="btn-add" onclick="openModal()">+ Nuova misura</button>
 </header>
+
+<!-- Profile incomplete banner -->
+<div id="profileBanner">
+    <span>👤</span>
+    <span>Completa il tuo profilo per ottenere un'analisi personalizzata.</span>
+    <button onclick="goToProfile()">Compila ora</button>
+    <button class="dismiss" onclick="document.getElementById('profileBanner').classList.remove('show')">✕</button>
+</div>
 
 <!-- Reminder Banner -->
 <div id="reminderBanner">
@@ -450,6 +651,7 @@
 <!-- Tabs -->
 <div class="tabs" style="max-width:900px; margin:0 auto;">
     <button class="tab active" onclick="switchTab('dashboard', this)">📊 Dashboard</button>
+    <button class="tab" onclick="switchTab('profile', this)">👤 Profilo</button>
     <button class="tab" onclick="switchTab('history', this)">📋 Storico</button>
     <button class="tab" onclick="switchTab('analysis', this)">🔬 Analisi</button>
     <button class="tab" onclick="switchTab('settings', this)">⚙️ Impostazioni</button>
@@ -460,6 +662,130 @@
     <!-- DASHBOARD -->
     <div id="tab-dashboard" class="tab-panel active">
         <div id="dashboardContent"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="tab-profile" class="tab-panel">
+
+        <div id="profileHeaderCard" class="profile-header-card" style="display:none;"></div>
+
+        <div class="profile-section">
+            <h3>Dati anagrafici</h3>
+            <div class="profile-grid">
+                <div class="pfield">
+                    <label>Nome e Cognome</label>
+                    <input type="text" id="pNome" placeholder="Es. Mario Rossi">
+                </div>
+                <div class="pfield">
+                    <label>Data di nascita</label>
+                    <input type="date" id="pNascita" oninput="updateBMI()">
+                </div>
+                <div class="pfield">
+                    <label>Sesso biologico</label>
+                    <select id="pSesso">
+                        <option value="">— seleziona —</option>
+                        <option value="M">Maschio</option>
+                        <option value="F">Femmina</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Dati biometrici</h3>
+            <div class="profile-grid cols3">
+                <div class="pfield">
+                    <label>Altezza (cm)</label>
+                    <input type="number" id="pAltezza" min="100" max="230" placeholder="170" oninput="updateBMI()">
+                </div>
+                <div class="pfield">
+                    <label>Peso (kg)</label>
+                    <input type="number" id="pPeso" min="30" max="300" placeholder="70" step="0.1" oninput="updateBMI()">
+                </div>
+                <div class="pfield">
+                    <label>Girovita (cm) <span style="font-size:.75rem;color:var(--text-muted)">opzionale</span></label>
+                    <input type="number" id="pGirovita" min="40" max="200" placeholder="85">
+                </div>
+            </div>
+            <div id="bmiDisplay" style="display:none; margin-top:14px;"></div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Stile di vita</h3>
+            <div class="toggle-row">
+                <span class="toggle-label">🚬 Fumatore / Ex-fumatore</span>
+                <label class="toggle">
+                    <input type="checkbox" id="pFumatore">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="toggle-row">
+                <span class="toggle-label">🍷 Consumo regolare di alcol</span>
+                <label class="toggle">
+                    <input type="checkbox" id="pAlcol">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="toggle-row">
+                <span class="toggle-label">🏃 Attività fisica regolare (≥ 3 volte/settimana)</span>
+                <label class="toggle">
+                    <input type="checkbox" id="pSport">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Condizioni mediche note</h3>
+            <div class="conditions-grid">
+                <label class="condition-item" id="ci-diabete">
+                    <input type="checkbox" id="pDiabete" onchange="updateConditionStyle('ci-diabete', this)"> 🩸 Diabete
+                </label>
+                <label class="condition-item" id="ci-rene">
+                    <input type="checkbox" id="pRene" onchange="updateConditionStyle('ci-rene', this)"> 🫘 Malattia renale cronica
+                </label>
+                <label class="condition-item" id="ci-cuore">
+                    <input type="checkbox" id="pCuore" onchange="updateConditionStyle('ci-cuore', this)"> 🫀 Malattia cardiovascolare
+                </label>
+                <label class="condition-item" id="ci-colest">
+                    <input type="checkbox" id="pColest" onchange="updateConditionStyle('ci-colest', this)"> 🧪 Ipercolesterolemia
+                </label>
+                <label class="condition-item" id="ci-ictus">
+                    <input type="checkbox" id="pIctus" onchange="updateConditionStyle('ci-ictus', this)"> 🧠 Ictus / TIA pregresso
+                </label>
+                <label class="condition-item" id="ci-apnee">
+                    <input type="checkbox" id="pApnee" onchange="updateConditionStyle('ci-apnee', this)"> 😴 Apnee notturne
+                </label>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Farmaci in uso</h3>
+            <div class="pfield">
+                <label>Farmaci antipertensivi o altri farmaci rilevanti</label>
+                <textarea id="pFarmaci" placeholder="Es. Ramipril 5mg 1cp/die, Amlodipina 5mg 1cp/die..."></textarea>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Medico curante <span class="future-badge">PROSSIMAMENTE</span></h3>
+            <div class="profile-grid">
+                <div class="pfield">
+                    <label>Nome medico</label>
+                    <input type="text" id="pMedico" placeholder="Dott. Bianchi">
+                </div>
+                <div class="pfield">
+                    <label>Email medico</label>
+                    <input type="email" id="pEmailMedico" placeholder="medico@esempio.it">
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="saveProfile()">💾 Salva profilo</button>
+            <button class="btn-cancel" onclick="renderProfileHeader()">Annulla</button>
+        </div>
+
     </div>
 
     <!-- HISTORY -->
@@ -498,10 +824,10 @@
         </div>
 
         <div class="settings-section">
-            <h3>Dati medico <span class="future-badge">PROSSIMAMENTE</span></h3>
+            <h3>Invio dati al medico <span class="future-badge">PROSSIMAMENTE</span></h3>
             <div class="future-section">
                 <div class="fi">🏥</div>
-                <p>In futuro sarà possibile inserire i dati del tuo medico<br>per inviare automaticamente il report o connettersi<br>a sistemi sanitari integrati.</p>
+                <p>In futuro sarà possibile inviare automaticamente il report<br>al medico via email o connettersi a sistemi sanitari integrati.<br>Inserisci già ora i dati del medico nel tab <strong>Profilo</strong>.</p>
             </div>
         </div>
 
@@ -561,8 +887,9 @@
 // ──────────────────────────────────────────────
 // DATA STORE
 // ──────────────────────────────────────────────
-const STORAGE_KEY = 'bp_records';
+const STORAGE_KEY  = 'bp_records';
 const SETTINGS_KEY = 'bp_settings';
+const PROFILE_KEY  = 'bp_profile';
 
 function getRecords() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
@@ -578,6 +905,13 @@ function getSettings() {
 }
 function saveSettingsData(s) {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+}
+function getProfile() {
+    try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; }
+    catch { return {}; }
+}
+function storeProfile(p) {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
 }
 
 // ──────────────────────────────────────────────
@@ -603,6 +937,62 @@ function badgeHtml(sys, dia) {
 }
 
 // ──────────────────────────────────────────────
+// PROFILE HELPERS
+// ──────────────────────────────────────────────
+function calcAge(birthDate) {
+    if (!birthDate) return null;
+    const today = new Date();
+    const bd = new Date(birthDate);
+    let age = today.getFullYear() - bd.getFullYear();
+    const m = today.getMonth() - bd.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
+    return age;
+}
+
+function calcBMI(peso, altezza) {
+    if (!peso || !altezza || altezza < 50) return null;
+    return +(peso / ((altezza / 100) ** 2)).toFixed(1);
+}
+
+function bmiCategory(bmi) {
+    if (!bmi) return null;
+    if (bmi < 18.5) return { label: 'Sottopeso',  color: '#0284c7', bg: '#e0f2fe' };
+    if (bmi < 25)   return { label: 'Normopeso',  color: '#16a34a', bg: '#dcfce7' };
+    if (bmi < 30)   return { label: 'Sovrappeso', color: '#ca8a04', bg: '#fef9c3' };
+    if (bmi < 35)   return { label: 'Obesità G1', color: '#ea580c', bg: '#ffedd5' };
+    return              { label: 'Obesità G2+', color: '#dc2626', bg: '#fee2e2' };
+}
+
+function profileIsComplete(p) {
+    return !!(p.nome && p.nascita && p.sesso && p.altezza && p.peso);
+}
+
+function updateBMI() {
+    const altezza = parseFloat(document.getElementById('pAltezza').value);
+    const peso    = parseFloat(document.getElementById('pPeso').value);
+    const bmi     = calcBMI(peso, altezza);
+    const el      = document.getElementById('bmiDisplay');
+    if (!bmi) { el.style.display = 'none'; return; }
+    const cat = bmiCategory(bmi);
+    el.style.display = 'block';
+    el.innerHTML = `<div class="bmi-display">
+        <div class="bmi-circle" style="background:${cat.bg};color:${cat.color}">${bmi}</div>
+        <div class="bmi-info">
+            <div class="bmi-val" style="color:${cat.color}">${bmi}</div>
+            <div class="bmi-cat" style="color:${cat.color}">${cat.label}</div>
+        </div>
+        <div style="font-size:.82rem;color:var(--text-muted);margin-left:auto;">
+            Indice di Massa Corporea<br>
+            <span style="font-size:.75rem;">Normale: 18.5 – 24.9</span>
+        </div>
+    </div>`;
+}
+
+function updateConditionStyle(id, cb) {
+    document.getElementById(id).classList.toggle('checked', cb.checked);
+}
+
+// ──────────────────────────────────────────────
 // TABS
 // ──────────────────────────────────────────────
 function switchTab(id, btn) {
@@ -611,9 +1001,108 @@ function switchTab(id, btn) {
     document.getElementById('tab-' + id).classList.add('active');
     btn.classList.add('active');
     if (id === 'dashboard') renderDashboard();
+    if (id === 'profile')   renderProfileForm();
     if (id === 'history')   renderHistory();
     if (id === 'analysis')  renderAnalysis();
     if (id === 'settings')  renderSettings();
+}
+
+function goToProfile() {
+    document.getElementById('profileBanner').classList.remove('show');
+    const profileTab = document.querySelectorAll('.tab')[1];
+    switchTab('profile', profileTab);
+}
+
+// ──────────────────────────────────────────────
+// RENDER PROFILE FORM
+// ──────────────────────────────────────────────
+function renderProfileForm() {
+    const p = getProfile();
+
+    document.getElementById('pNome').value        = p.nome || '';
+    document.getElementById('pNascita').value     = p.nascita || '';
+    document.getElementById('pSesso').value       = p.sesso || '';
+    document.getElementById('pAltezza').value     = p.altezza || '';
+    document.getElementById('pPeso').value        = p.peso || '';
+    document.getElementById('pGirovita').value    = p.girovita || '';
+    document.getElementById('pFumatore').checked  = !!p.fumatore;
+    document.getElementById('pAlcol').checked     = !!p.alcol;
+    document.getElementById('pSport').checked     = !!p.sport;
+    document.getElementById('pDiabete').checked   = !!p.diabete;
+    document.getElementById('pRene').checked      = !!p.rene;
+    document.getElementById('pCuore').checked     = !!p.cuore;
+    document.getElementById('pColest').checked    = !!p.colest;
+    document.getElementById('pIctus').checked     = !!p.ictus;
+    document.getElementById('pApnee').checked     = !!p.apnee;
+    document.getElementById('pFarmaci').value     = p.farmaci || '';
+    document.getElementById('pMedico').value      = p.medico || '';
+    document.getElementById('pEmailMedico').value = p.emailMedico || '';
+
+    ['diabete','rene','cuore','colest','ictus','apnee'].forEach(k => {
+        document.getElementById('ci-'+k).classList.toggle('checked', !!p[k]);
+    });
+
+    updateBMI();
+    renderProfileHeader();
+}
+
+function renderProfileHeader() {
+    const p = getProfile();
+    const card = document.getElementById('profileHeaderCard');
+    if (!profileIsComplete(p)) { card.style.display = 'none'; return; }
+
+    const age  = calcAge(p.nascita);
+    const bmi  = calcBMI(p.peso, p.altezza);
+    const bmiC = bmiCategory(bmi);
+
+    const chips = [];
+    if (p.diabete)  chips.push(`<span class="risk-chip chip-red">🩸 Diabete</span>`);
+    if (p.rene)     chips.push(`<span class="risk-chip chip-orange">🫘 Malattia renale</span>`);
+    if (p.cuore)    chips.push(`<span class="risk-chip chip-red">🫀 Cardiovascolare</span>`);
+    if (p.colest)   chips.push(`<span class="risk-chip chip-yellow">🧪 Colesterolo</span>`);
+    if (p.ictus)    chips.push(`<span class="risk-chip chip-red">🧠 Ictus/TIA</span>`);
+    if (p.apnee)    chips.push(`<span class="risk-chip chip-blue">😴 Apnee</span>`);
+    if (p.fumatore) chips.push(`<span class="risk-chip chip-orange">🚬 Fumatore</span>`);
+    if (bmi && bmi >= 30) chips.push(`<span class="risk-chip chip-orange">⚖️ Obesità</span>`);
+    if (bmi && bmi >= 25 && bmi < 30) chips.push(`<span class="risk-chip chip-yellow">⚖️ Sovrappeso</span>`);
+    if (p.sport)    chips.push(`<span class="risk-chip chip-gray">🏃 Attivo</span>`);
+
+    card.style.display = 'flex';
+    card.innerHTML = `
+        <div class="profile-avatar">${p.sesso === 'F' ? '👩' : '👨'}</div>
+        <div class="profile-summary">
+            <h2>${escHtml(p.nome)}</h2>
+            <p>${age ? age + ' anni · ' : ''}${p.sesso === 'M' ? 'Maschio' : 'Femmina'}${p.altezza ? ' · ' + p.altezza + ' cm' : ''}${p.peso ? ' · ' + p.peso + ' kg' : ''}${bmi ? ' · BMI ' + bmi + ' (' + bmiC.label + ')' : ''}</p>
+            ${chips.length ? `<div class="risk-chips">${chips.join('')}</div>` : ''}
+        </div>
+    `;
+}
+
+function saveProfile() {
+    const p = {
+        nome:        document.getElementById('pNome').value.trim(),
+        nascita:     document.getElementById('pNascita').value,
+        sesso:       document.getElementById('pSesso').value,
+        altezza:     parseFloat(document.getElementById('pAltezza').value) || null,
+        peso:        parseFloat(document.getElementById('pPeso').value) || null,
+        girovita:    parseFloat(document.getElementById('pGirovita').value) || null,
+        fumatore:    document.getElementById('pFumatore').checked,
+        alcol:       document.getElementById('pAlcol').checked,
+        sport:       document.getElementById('pSport').checked,
+        diabete:     document.getElementById('pDiabete').checked,
+        rene:        document.getElementById('pRene').checked,
+        cuore:       document.getElementById('pCuore').checked,
+        colest:      document.getElementById('pColest').checked,
+        ictus:       document.getElementById('pIctus').checked,
+        apnee:       document.getElementById('pApnee').checked,
+        farmaci:     document.getElementById('pFarmaci').value.trim(),
+        medico:      document.getElementById('pMedico').value.trim(),
+        emailMedico: document.getElementById('pEmailMedico').value.trim(),
+    };
+    storeProfile(p);
+    renderProfileHeader();
+    document.getElementById('profileBanner').classList.remove('show');
+    showToast('Profilo salvato!');
 }
 
 // ──────────────────────────────────────────────
@@ -639,8 +1128,8 @@ function handleOverlayClick(e) {
 }
 
 function updatePreview() {
-    const sys = document.getElementById('inSys').value;
-    const dia = document.getElementById('inDia').value;
+    const sys   = document.getElementById('inSys').value;
+    const dia   = document.getElementById('inDia').value;
     const pulse = document.getElementById('inPulse').value;
     if (sys && dia) {
         const c = classify(sys, dia);
@@ -657,11 +1146,11 @@ function updatePreview() {
 }
 
 function saveMeasurement() {
-    const sys = parseInt(document.getElementById('inSys').value);
-    const dia = parseInt(document.getElementById('inDia').value);
-    const pulse = parseInt(document.getElementById('inPulse').value) || null;
+    const sys    = parseInt(document.getElementById('inSys').value);
+    const dia    = parseInt(document.getElementById('inDia').value);
+    const pulse  = parseInt(document.getElementById('inPulse').value) || null;
     const dateVal = document.getElementById('inDate').value;
-    const note = document.getElementById('inNote').value.trim();
+    const note   = document.getElementById('inNote').value.trim();
 
     if (!sys || !dia) { alert('Inserisci sistolica e diastolica.'); return; }
     if (sys < 60 || sys > 250) { alert('Valore sistolica non valido (60-250).'); return; }
@@ -669,13 +1158,7 @@ function saveMeasurement() {
     if (pulse !== null && (pulse < 30 || pulse > 220)) { alert('Valore polso non valido (30-220).'); return; }
 
     const records = getRecords();
-    records.unshift({
-        id: Date.now(),
-        date: dateVal || new Date().toISOString(),
-        sys, dia,
-        pulse: pulse || null,
-        note: note || ''
-    });
+    records.unshift({ id: Date.now(), date: dateVal || new Date().toISOString(), sys, dia, pulse: pulse || null, note: note || '' });
     saveRecords(records);
     closeModal();
     renderDashboard();
@@ -707,6 +1190,7 @@ let dashChart = null;
 
 function renderDashboard() {
     const records = getRecords();
+    const profile = getProfile();
     const el = document.getElementById('dashboardContent');
 
     if (records.length === 0) {
@@ -718,17 +1202,19 @@ function renderDashboard() {
         return;
     }
 
-    const last = records[0];
-    const lastCat = classify(last.sys, last.dia);
+    const last     = records[0];
+    const lastCat  = classify(last.sys, last.dia);
     const recent10 = records.slice(0, 10);
-    const avgSys = Math.round(recent10.reduce((a, r) => a + r.sys, 0) / recent10.length);
-    const avgDia = Math.round(recent10.reduce((a, r) => a + r.dia, 0) / recent10.length);
-    const maxSys = Math.max(...recent10.map(r => r.sys));
-    const minSys = Math.min(...recent10.map(r => r.sys));
+    const avgSys   = Math.round(recent10.reduce((a, r) => a + r.sys, 0) / recent10.length);
+    const avgDia   = Math.round(recent10.reduce((a, r) => a + r.dia, 0) / recent10.length);
+    const maxSys   = Math.max(...recent10.map(r => r.sys));
+    const minSys   = Math.min(...recent10.map(r => r.sys));
+    const dateStr  = formatDate(last.date);
 
-    const dateStr = formatDate(last.date);
+    const greeting = profile.nome ? `<div style="font-size:.9rem;color:var(--text-muted);margin-bottom:16px;">Ciao, <strong>${escHtml(profile.nome)}</strong> 👋</div>` : '';
 
     el.innerHTML = `
+        ${greeting}
         <div class="last-reading">
             <div>
                 <div style="font-size:.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Ultima misurazione</div>
@@ -782,14 +1268,11 @@ function renderDashboard() {
         </div>
     `;
 
-    const chartData = records.slice(0, 14).reverse();
-    const labels = chartData.map(r => formatDateShort(r.date));
-    const sysData = chartData.map(r => r.sys);
-    const diaData = chartData.map(r => r.dia);
-    const pointColors = chartData.map(r => {
-        const c = classify(r.sys, r.dia);
-        return c ? c.color : '#94a3b8';
-    });
+    const chartData   = records.slice(0, 14).reverse();
+    const labels      = chartData.map(r => formatDateShort(r.date));
+    const sysData     = chartData.map(r => r.sys);
+    const diaData     = chartData.map(r => r.dia);
+    const pointColors = chartData.map(r => { const c = classify(r.sys, r.dia); return c ? c.color : '#94a3b8'; });
 
     if (dashChart) { dashChart.destroy(); dashChart = null; }
     const ctx = document.getElementById('dashChartCanvas').getContext('2d');
@@ -798,29 +1281,8 @@ function renderDashboard() {
         data: {
             labels,
             datasets: [
-                {
-                    label: 'Sistolica',
-                    data: sysData,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37,99,235,.08)',
-                    tension: .35,
-                    fill: false,
-                    pointBackgroundColor: pointColors,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                },
-                {
-                    label: 'Diastolica',
-                    data: diaData,
-                    borderColor: '#7c3aed',
-                    backgroundColor: 'rgba(124,58,237,.06)',
-                    tension: .35,
-                    fill: false,
-                    pointBackgroundColor: pointColors,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderDash: [5, 3],
-                }
+                { label: 'Sistolica', data: sysData, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.08)', tension: .35, fill: false, pointBackgroundColor: pointColors, pointRadius: 5, pointHoverRadius: 7 },
+                { label: 'Diastolica', data: diaData, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,.06)', tension: .35, fill: false, pointBackgroundColor: pointColors, pointRadius: 4, pointHoverRadius: 6, borderDash: [5, 3] }
             ]
         },
         options: {
@@ -860,16 +1322,9 @@ function renderHistory() {
 
     el.innerHTML = `
         <table>
-            <thead>
-                <tr>
-                    <th>Data e ora</th>
-                    <th>Pressione</th>
-                    <th>Polso</th>
-                    <th>Categoria</th>
-                    <th>Note</th>
-                    <th></th>
-                </tr>
-            </thead>
+            <thead><tr>
+                <th>Data e ora</th><th>Pressione</th><th>Polso</th><th>Categoria</th><th>Note</th><th></th>
+            </tr></thead>
             <tbody>${rows}</tbody>
         </table>
     `;
@@ -884,79 +1339,131 @@ function deleteRecord(id) {
 }
 
 // ──────────────────────────────────────────────
-// RENDER ANALYSIS
+// RENDER ANALYSIS  (personalizzata sul profilo)
 // ──────────────────────────────────────────────
 function renderAnalysis() {
     const records = getRecords();
-    const el = document.getElementById('analysisContent');
+    const p       = getProfile();
+    const el      = document.getElementById('analysisContent');
 
     if (records.length < 2) {
         el.innerHTML = `<div class="empty-state"><div class="icon">🔬</div><p>Servono almeno 2 misurazioni per l'analisi.<br>Continua a monitorare!</p></div>`;
         return;
     }
 
-    const last10 = records.slice(0, Math.min(10, records.length));
-    const avgSys = +(last10.reduce((a, r) => a + r.sys, 0) / last10.length).toFixed(1);
-    const avgDia = +(last10.reduce((a, r) => a + r.dia, 0) / last10.length).toFixed(1);
+    const last10   = records.slice(0, Math.min(10, records.length));
+    const avgSys   = +(last10.reduce((a, r) => a + r.sys, 0) / last10.length).toFixed(1);
+    const avgDia   = +(last10.reduce((a, r) => a + r.dia, 0) / last10.length).toFixed(1);
     const avgPulse = last10.filter(r => r.pulse).length > 0
         ? Math.round(last10.filter(r => r.pulse).reduce((a, r) => a + r.pulse, 0) / last10.filter(r => r.pulse).length)
         : null;
+    const maxSys   = Math.max(...last10.map(r => r.sys));
+    const minSys   = Math.min(...last10.map(r => r.sys));
 
-    const maxSys = Math.max(...last10.map(r => r.sys));
-    const minSys = Math.min(...last10.map(r => r.sys));
-
-    // Trend: compare first half vs second half (or first vs last if only 2)
-    const half = Math.ceil(last10.length / 2);
-    const recentHalf = last10.slice(0, half);
-    const olderHalf = last10.slice(half);
+    // Trend
+    const half         = Math.ceil(last10.length / 2);
+    const recentHalf   = last10.slice(0, half);
+    const olderHalf    = last10.slice(half);
     const recentAvgSys = recentHalf.reduce((a, r) => a + r.sys, 0) / recentHalf.length;
-    const olderAvgSys = olderHalf.length > 0 ? olderHalf.reduce((a, r) => a + r.sys, 0) / olderHalf.length : recentAvgSys;
-    const diff = recentAvgSys - olderAvgSys;
+    const olderAvgSys  = olderHalf.length > 0 ? olderHalf.reduce((a, r) => a + r.sys, 0) / olderHalf.length : recentAvgSys;
+    const diff         = recentAvgSys - olderAvgSys;
     let trendIcon, trendText, trendColor;
-    if (Math.abs(diff) < 3)     { trendIcon = '→'; trendText = 'Stabile';    trendColor = 'var(--text-muted)'; }
-    else if (diff > 0)           { trendIcon = '↗'; trendText = 'In aumento'; trendColor = 'var(--red)'; }
-    else                         { trendIcon = '↘'; trendText = 'In calo';    trendColor = 'var(--green)'; }
+    if (Math.abs(diff) < 3)   { trendIcon = '→'; trendText = 'Stabile';    trendColor = 'var(--text-muted)'; }
+    else if (diff > 0)         { trendIcon = '↗'; trendText = 'In aumento'; trendColor = 'var(--red)'; }
+    else                       { trendIcon = '↘'; trendText = 'In calo';    trendColor = 'var(--green)'; }
 
-    // Critical readings
+    // Soglie personalizzate: pazienti ad alto rischio (diabete, rene, cuore, ictus) → 130/80
+    const highRisk      = p.diabete || p.rene || p.cuore || p.ictus;
+    const alertThSys    = highRisk ? 130 : 140;
+    const alertThDia    = highRisk ? 80  : 90;
+
     const criticals = last10.filter(r => {
         const c = classify(r.sys, r.dia);
-        return c && c.level >= 4;
+        return c && (highRisk ? c.level >= 3 : c.level >= 4);
     });
-    const grade3 = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level >= 6; });
-    const hypo = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level === 0; });
+    const grade3    = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level >= 6; });
+    const hypo      = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level === 0; });
+
+    // Profilo biometrico
+    const age  = calcAge(p.nascita);
+    const bmi  = calcBMI(p.peso, p.altezza);
+    const bmiC = bmiCategory(bmi);
 
     // Build alerts
     let alerts = '';
+
+    // Profilo incompleto → invita a completare
+    if (!profileIsComplete(p)) {
+        alerts += alertBox('info', '👤', 'Profilo non completo',
+            `Compila il <strong>tab Profilo</strong> con età, peso, altezza e condizioni mediche per ottenere un'analisi personalizzata. Senza questi dati le soglie usate sono quelle generali (≥140/90).`);
+    }
+
+    // Soglie personalizzate attive
+    if (highRisk && profileIsComplete(p)) {
+        const conds = [p.diabete && 'diabete', p.rene && 'malattia renale', p.cuore && 'malattia cardiovascolare', p.ictus && 'ictus/TIA'].filter(Boolean).join(', ');
+        alerts += alertBox('info', '⚕️', `Soglie personalizzate attive (${alertThSys}/${alertThDia} mmHg)`,
+            `Per la presenza di <strong>${conds}</strong>, le linee guida ESH 2023 raccomandano un obiettivo pressorio &lt;${alertThSys}/${alertThDia} mmHg. L'analisi usa questi valori come riferimento.`);
+    }
+
     if (grade3.length > 0) {
         alerts += alertBox('critical', '🚨', 'ATTENZIONE: Ipertensione di Grado 3 rilevata',
-            `Nei tuoi ultimi ${last10.length} dati hai ${grade3.length} misurazione/i con pressione ≥ 180/110 mmHg (Ipertensione Grado 3). È consigliabile contattare il medico il prima possibile.`);
+            `Hai ${grade3.length} misurazione/i con pressione ≥ 180/110 mmHg. È consigliabile contattare il medico il prima possibile.`);
     }
     if (criticals.length >= 3) {
         alerts += alertBox('danger', '⚠️', 'Valori elevati frequenti',
-            `${criticals.length} misurazioni su ${last10.length} rientrano in Ipertensione Grado 1 o superiore. Consulta il medico per una valutazione.`);
+            `${criticals.length} misurazioni su ${last10.length} superano la soglia ${alertThSys}/${alertThDia} mmHg${highRisk ? ' (personalizzata per il tuo profilo)' : ''}. Consulta il medico.`);
     } else if (criticals.length >= 1 && criticals.length < 3) {
-        alerts += alertBox('warn', '⚠️', 'Alcuni valori elevati rilevati',
-            `${criticals.length} misurazione/i presenta pressione nel range Ipertensione Grado 1 (140-159/90-99). Monitora con attenzione.`);
+        alerts += alertBox('warn', '⚠️', 'Alcuni valori elevati',
+            `${criticals.length} misurazione/i supera ${alertThSys}/${alertThDia} mmHg${highRisk ? ' (soglia personalizzata)' : ''}. Monitora con attenzione.`);
     }
     if (hypo.length > 0) {
+        const hypoNote = p.farmaci ? ' Verifica con il medico se correlato ai farmaci in uso.' : '';
         alerts += alertBox('low', '💡', 'Ipotensione rilevata',
-            `${hypo.length} misurazione/i con pressione inferiore a 90/60 mmHg (Ipotensione). Se accompagnata da sintomi, consulta il medico.`);
+            `${hypo.length} misurazione/i sotto 90/60 mmHg.${hypoNote}`);
     }
-    if (avgSys >= 130 || avgDia >= 85) {
-        alerts += alertBox('warn', '📊', 'Media superiore al valore ottimale',
-            `La tua media (${avgSys}/${avgDia} mmHg) supera i valori ottimali (<120/80). Discutine con il tuo medico durante la prossima visita.`);
-    }
-    if (!alerts) {
-        const avgCat = classify(Math.round(avgSys), Math.round(avgDia));
-        const label = avgCat ? avgCat.label : 'nella norma';
-        alerts = alertBox('ok', '✅', 'Valori nella norma',
-            `Ottimo! I tuoi ultimi ${last10.length} valori mostrano una pressione mediamente ${label.toLowerCase()}. Continua a monitorare regolarmente.`);
+    if (avgSys >= alertThSys || avgDia >= alertThDia) {
+        alerts += alertBox('warn', '📊', 'Media superiore al target',
+            `La tua media (${avgSys}/${avgDia} mmHg) supera il target ${alertThSys}/${alertThDia} mmHg${highRisk ? ' (personalizzato)' : ' ottimale'}. Discutine con il medico.`);
     }
 
-    // Report for doctor
+    // Alert biometrici dal profilo
+    if (bmi && bmi >= 30) {
+        alerts += alertBox('warn', '⚖️', 'Peso corporeo: fattore di rischio',
+            `Il tuo BMI è ${bmi} (${bmiC.label}). L'obesità è uno dei principali fattori di rischio per l'ipertensione. Anche una riduzione del 5-10% del peso può abbassare sensibilmente la pressione.`);
+    } else if (bmi && bmi >= 25) {
+        alerts += alertBox('warn', '⚖️', 'Sovrappeso rilevato',
+            `BMI ${bmi} (${bmiC.label}). Il sovrappeso aumenta il rischio cardiovascolare. Mantenersi nel range normale (18.5–24.9) aiuta a controllare la pressione.`);
+    }
+    if (p.fumatore) {
+        alerts += alertBox('warn', '🚬', 'Fumo: rischio cardiovascolare aggiuntivo',
+            `Il fumo danneggia le pareti arteriose e aumenta significativamente il rischio cardiovascolare, amplificando gli effetti dell'ipertensione.`);
+    }
+    if (age && age >= 65) {
+        alerts += alertBox('info', '🏥', 'Nota per pazienti over 65',
+            `Dopo i 65 anni è più comune l'ipertensione sistolica isolata (sistolica alta, diastolica nella norma). Il target ESH 2023 per over 65 è sistolica 130-139 mmHg, pur mantenendo la diastolica >70.`);
+    }
+    if (!p.sport && records.length >= 5) {
+        alerts += alertBox('info', '🏃', 'Attività fisica',
+            `L'esercizio aerobico regolare (es. 30 min di camminata 5 volte/settimana) può ridurre la pressione sistolica di 5-8 mmHg. Se non sei ancora attivo, valuta di iniziare.`);
+    }
+
+    if (!alerts) {
+        const avgCat = classify(Math.round(avgSys), Math.round(avgDia));
+        alerts = alertBox('ok', '✅', 'Valori nella norma',
+            `I tuoi ultimi ${last10.length} valori mostrano una pressione mediamente ${avgCat ? avgCat.label.toLowerCase() : 'nella norma'}. Continua a monitorare regolarmente.`);
+    }
+
+    // Report per il medico
+    const profileLine = profileIsComplete(p)
+        ? `Paziente: ${p.nome} | ${age ? age + ' anni' : ''} | ${p.sesso === 'M' ? 'M' : 'F'} | Altezza: ${p.altezza} cm | Peso: ${p.peso} kg | BMI: ${bmi}\n` +
+          `Condizioni: ${[p.diabete && 'diabete', p.rene && 'malattia renale', p.cuore && 'malattia cardiovascolare', p.colest && 'ipercolesterolemia', p.ictus && 'ictus/TIA', p.apnee && 'apnee notturne'].filter(Boolean).join(', ') || 'nessuna'}\n` +
+          (p.fumatore ? 'Fumatore: sì\n' : '') +
+          (p.farmaci ? `Farmaci: ${p.farmaci}\n` : '')
+        : '';
+
     const reportLines = last10.map(r => {
         const c = classify(r.sys, r.dia);
-        return `• ${formatDate(r.date)}: ${r.sys}/${r.dia} mmHg${r.pulse ? ', polso '+r.pulse+' bpm' : ''}  [${c ? c.label : '—'}]${r.note ? '  ('+r.note+')' : ''}`;
+        return `• ${formatDate(r.date)}: ${r.sys}/${r.dia} mmHg${r.pulse ? ', polso ' + r.pulse + ' bpm' : ''}  [${c ? c.label : '—'}]${r.note ? '  (' + r.note + ')' : ''}`;
     });
 
     el.innerHTML = `
@@ -986,33 +1493,28 @@ function renderAnalysis() {
                 <div class="val" style="color:var(--text-muted)">${minSys}</div>
                 <div class="lbl">Minima sistolica</div>
             </div>
-            ${avgPulse ? `<div class="analysis-item">
-                <div class="val" style="color:var(--red)">💓 ${avgPulse}</div>
-                <div class="lbl">Media polso (bpm)</div>
-            </div>` : ''}
+            ${avgPulse ? `<div class="analysis-item"><div class="val" style="color:var(--red)">💓 ${avgPulse}</div><div class="lbl">Media polso (bpm)</div></div>` : ''}
+            ${bmi ? `<div class="analysis-item"><div class="val" style="color:${bmiC.color}">${bmi}</div><div class="lbl">BMI</div><div class="trend" style="color:${bmiC.color}">${bmiC.label}</div></div>` : ''}
+            ${age ? `<div class="analysis-item"><div class="val" style="color:var(--text-muted)">${age}</div><div class="lbl">Età</div></div>` : ''}
         </div>
 
         <div class="report-box">
             <h4>Report per il medico — copia e incolla</h4>
-            <div style="font-family:monospace;font-size:.82rem;line-height:1.8;">
-                <strong>MONITORAGGIO PRESSIONE ARTERIOSA</strong><br>
-                Periodo: ${formatDateShort(last10[last10.length-1].date)} → ${formatDateShort(last10[0].date)}<br>
-                Media: ${avgSys}/${avgDia} mmHg | Tendenza: ${trendText}<br>
-                ${avgPulse ? 'Polso medio: '+avgPulse+' bpm<br>' : ''}
-                <br>
-                ${reportLines.join('<br>')}
-            </div>
-            <div style="margin-top:12px;">
+            <div id="reportText" style="font-family:monospace;font-size:.82rem;line-height:1.8;white-space:pre-wrap;">MONITORAGGIO PRESSIONE ARTERIOSA
+${profileLine}Periodo: ${formatDateShort(last10[last10.length - 1].date)} → ${formatDateShort(last10[0].date)}
+Media: ${avgSys}/${avgDia} mmHg | Tendenza: ${trendText}
+${avgPulse ? 'Polso medio: ' + avgPulse + ' bpm\n' : ''}
+${reportLines.join('\n')}</div>
+            <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
                 <button class="btn-export" onclick="copyReport()">📋 Copia testo</button>
-                <span style="margin-left:8px;color:var(--text-muted);font-size:.82rem;">oppure</span>
-                <button class="btn-export" onclick="exportCSV()" style="margin-left:8px;">📥 Esporta CSV</button>
+                <button class="btn-export" onclick="exportCSV()">📥 Esporta CSV</button>
             </div>
         </div>
     `;
 }
 
 function alertBox(type, icon, title, text) {
-    const cls = { ok: 'alert-ok', warn: 'alert-warn', danger: 'alert-danger', critical: 'alert-critical', low: 'alert-low' }[type];
+    const cls = { ok: 'alert-ok', warn: 'alert-warn', danger: 'alert-danger', critical: 'alert-critical', low: 'alert-low', info: 'alert-info' }[type];
     return `<div class="alert-box ${cls}">
         <span class="icon">${icon}</span>
         <div><h4>${title}</h4><p>${text}</p></div>
@@ -1020,8 +1522,7 @@ function alertBox(type, icon, title, text) {
 }
 
 function copyReport() {
-    const box = document.querySelector('.report-box div[style*="monospace"]');
-    const text = box.innerText;
+    const text = document.getElementById('reportText').innerText;
     navigator.clipboard.writeText(text).then(() => showToast('Report copiato!'));
 }
 
@@ -1042,10 +1543,10 @@ function saveSettings() {
 }
 
 function clearAllData() {
-    if (!confirm('Eliminare TUTTI i dati? Questa azione è irreversibile.')) return;
+    if (!confirm('Eliminare TUTTI i dati di misurazione? Questa azione è irreversibile.\n(Il profilo paziente viene mantenuto.)')) return;
     localStorage.removeItem(STORAGE_KEY);
     renderDashboard();
-    showToast('Tutti i dati eliminati.');
+    showToast('Dati di misurazione eliminati.');
 }
 
 // ──────────────────────────────────────────────
@@ -1057,16 +1558,17 @@ function checkReminder() {
     const records = getRecords();
     if (records.length === 0) return;
 
-    const last = new Date(records[0].date);
+    const last     = new Date(records[0].date);
     const hoursAgo = (Date.now() - last.getTime()) / 3600000;
 
     if (hoursAgo >= s.reminderHours) {
         const h = Math.floor(hoursAgo);
+        const p = getProfile();
+        const who = p.nome ? `, ${p.nome.split(' ')[0]}` : '';
         document.getElementById('reminderText').textContent =
-            `Ultima misurazione ${h < 24 ? h + ' ore fa' : Math.floor(h/24) + ' giorni fa'}. Ora di registrare i valori!`;
+            `Ultima misurazione ${h < 24 ? h + ' ore fa' : Math.floor(h / 24) + ' giorni fa'}${who}. Ora di registrare i valori!`;
         document.getElementById('reminderBanner').classList.add('show');
 
-        // Browser notification
         if (Notification.permission === 'granted') {
             new Notification('Monitor Pressione', {
                 body: `Sono passate ${h} ore dall'ultima misurazione. Registra la pressione!`,
@@ -1083,14 +1585,8 @@ function dismissReminder() {
 }
 
 function requestNotifications() {
-    if (!('Notification' in window)) {
-        showToast('Le notifiche non sono supportate dal browser.');
-        return;
-    }
-    Notification.requestPermission().then(p => {
-        updateNotifStatus();
-        if (p === 'granted') showToast('Notifiche abilitate!');
-    });
+    if (!('Notification' in window)) { showToast('Notifiche non supportate dal browser.'); return; }
+    Notification.requestPermission().then(p => { updateNotifStatus(); if (p === 'granted') showToast('Notifiche abilitate!'); });
 }
 
 function updateNotifStatus() {
@@ -1108,25 +1604,27 @@ function updateNotifStatus() {
 function exportCSV() {
     const records = getRecords();
     if (records.length === 0) { showToast('Nessun dato da esportare.'); return; }
+    const p = getProfile();
+    const profileInfo = profileIsComplete(p)
+        ? `# Paziente: ${p.nome} | Età: ${calcAge(p.nascita)} | BMI: ${calcBMI(p.peso, p.altezza)}\n`
+        : '';
     const header = 'Data,Ora,Sistolica,Diastolica,Polso,Categoria,Note';
     const rows = records.map(r => {
-        const d = new Date(r.date);
+        const d   = new Date(r.date);
         const cat = classify(r.sys, r.dia);
         return [
             d.toLocaleDateString('it-IT'),
             d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
-            r.sys,
-            r.dia,
-            r.pulse || '',
+            r.sys, r.dia, r.pulse || '',
             cat ? cat.label : '',
             '"' + (r.note || '').replace(/"/g, '""') + '"'
         ].join(',');
     });
-    const csv = [header, ...rows].join('\n');
+    const csv  = profileInfo + [header, ...rows].join('\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
     a.download = 'pressione_' + new Date().toISOString().slice(0, 10) + '.csv';
     a.click();
     URL.revokeObjectURL(url);
@@ -1149,11 +1647,11 @@ function formatDateShort(iso) {
         ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 }
 function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 // ──────────────────────────────────────────────
-// KEYBOARD SHORTCUTS
+// KEYBOARD
 // ──────────────────────────────────────────────
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
@@ -1168,7 +1666,13 @@ document.addEventListener('keydown', e => {
 renderDashboard();
 checkReminder();
 
-// Re-check reminder every 15 minutes
+// Mostra banner profilo se non completato (solo dopo 1 misura)
+const _records = getRecords();
+const _profile = getProfile();
+if (_records.length >= 1 && !profileIsComplete(_profile)) {
+    document.getElementById('profileBanner').classList.add('show');
+}
+
 setInterval(checkReminder, 15 * 60 * 1000);
 </script>
 </body>
