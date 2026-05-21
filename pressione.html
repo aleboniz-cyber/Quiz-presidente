@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Pressione Arteriosa</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --surface: #ffffff;
+            --bg: #f1f5f9;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --green: #16a34a;
+            --green-bg: #dcfce7;
+            --yellow: #ca8a04;
+            --yellow-bg: #fef9c3;
+            --orange: #ea580c;
+            --orange-bg: #ffedd5;
+            --red: #dc2626;
+            --red-bg: #fee2e2;
+            --purple: #7c3aed;
+            --purple-bg: #ede9fe;
+            --blue: #0284c7;
+            --blue-bg: #e0f2fe;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--primary);
+            color: #fff;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,.2);
+        }
+        header h1 { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        header h1 span { font-size: 1.4rem; }
+        .btn-add {
+            background: #fff;
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background .15s;
+        }
+        .btn-add:hover { background: #e0e7ff; }
+
+        /* ── Reminder banner ── */
+        #reminderBanner {
+            display: none;
+            background: #fef3c7;
+            border-bottom: 2px solid #f59e0b;
+            padding: 10px 20px;
+            font-size: .9rem;
+            color: #92400e;
+            align-items: center;
+            gap: 10px;
+        }
+        #reminderBanner.show { display: flex; }
+        #reminderBanner .icon { font-size: 1.3rem; }
+        #reminderBanner button {
+            margin-left: auto;
+            background: #f59e0b;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: .82rem;
+            cursor: pointer;
+        }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 16px 20px 0;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 8px 18px;
+            border-radius: 8px 8px 0 0;
+            background: var(--border);
+            color: var(--text-muted);
+            border: none;
+            font-size: .88rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .15s;
+        }
+        .tab.active { background: var(--surface); color: var(--primary); font-weight: 700; }
+
+        /* ── Main layout ── */
+        main {
+            padding: 0 20px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tab-panel { display: none; background: var(--surface); border-radius: 0 var(--radius) var(--radius); padding: 20px; box-shadow: var(--shadow-md); }
+        .tab-panel.active { display: block; }
+
+        /* ── Dashboard ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--bg);
+            border-radius: var(--radius);
+            padding: 16px;
+            border-left: 4px solid var(--primary);
+        }
+        .stat-card .label { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+        .stat-card .value { font-size: 2rem; font-weight: 700; margin: 4px 0; line-height: 1; }
+        .stat-card .sub { font-size: .82rem; color: var(--text-muted); }
+
+        .last-reading {
+            background: var(--bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .bp-display {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .bp-display .sep { color: var(--text-muted); margin: 0 4px; }
+        .bp-info { flex: 1; min-width: 160px; }
+        .bp-info .date { font-size: .85rem; color: var(--text-muted); }
+        .bp-info .category { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: .82rem; font-weight: 600; margin-top: 6px; }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state .icon { font-size: 3.5rem; margin-bottom: 12px; }
+        .empty-state p { font-size: 1rem; margin-bottom: 16px; }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-size: .95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .15s;
+        }
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        /* ── Chart ── */
+        .chart-container { position: relative; height: 250px; margin-top: 20px; }
+
+        /* ── History table ── */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .btn-export {
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: .85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-export:hover { background: #15803d; }
+
+        table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+        thead th {
+            text-align: left;
+            padding: 8px 10px;
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            border-bottom: 2px solid var(--border);
+        }
+        tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+        tbody tr:hover { background: var(--bg); }
+        tbody td { padding: 10px; }
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: .78rem;
+            font-weight: 600;
+        }
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .btn-delete:hover { color: var(--red); background: var(--red-bg); }
+
+        /* ── Analysis ── */
+        .alert-box {
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .alert-box .icon { font-size: 1.4rem; flex-shrink: 0; }
+        .alert-box h4 { font-size: .95rem; margin-bottom: 4px; }
+        .alert-box p { font-size: .85rem; line-height: 1.5; }
+        .alert-ok { background: var(--green-bg); color: #14532d; }
+        .alert-warn { background: var(--yellow-bg); color: #78350f; }
+        .alert-danger { background: var(--orange-bg); color: #7c2d12; }
+        .alert-critical { background: var(--red-bg); color: #7f1d1d; }
+        .alert-low { background: var(--blue-bg); color: #0c4a6e; }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .analysis-item {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+        .analysis-item .val { font-size: 1.8rem; font-weight: 700; }
+        .analysis-item .lbl { font-size: .78rem; color: var(--text-muted); margin-top: 4px; }
+        .analysis-item .trend { font-size: .82rem; margin-top: 6px; }
+
+        .report-box {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 20px;
+            font-size: .88rem;
+            line-height: 1.7;
+        }
+        .report-box h4 { margin-bottom: 10px; color: var(--text-muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+
+        /* ── Settings ── */
+        .settings-section { margin-bottom: 24px; }
+        .settings-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: .85rem; font-weight: 500; margin-bottom: 6px; }
+        .form-group select, .form-group input[type="text"], .form-group input[type="email"] {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: .9rem;
+            background: var(--bg);
+            color: var(--text);
+        }
+        .form-group select:focus, .form-group input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+        .btn-save {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 20px;
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-save:hover { background: var(--primary-dark); }
+        .btn-danger {
+            background: var(--red);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 20px;
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-danger:hover { background: #b91c1c; }
+        .future-badge {
+            display: inline-block;
+            background: var(--purple-bg);
+            color: var(--purple);
+            font-size: .72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+        .future-section {
+            background: var(--bg);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: .9rem;
+        }
+        .future-section .fi { font-size: 2rem; margin-bottom: 8px; }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.3);
+            animation: slideUp .2s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal h2 { font-size: 1.15rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .modal-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal-fields .full { grid-column: 1 / -1; }
+        .field label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: 5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+        .field input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text);
+            background: var(--bg);
+            transition: border-color .15s;
+        }
+        .field input:focus { outline: none; border-color: var(--primary); background: #fff; }
+        .field input[type="text"] { text-align: left; font-size: .9rem; font-weight: 400; }
+        .field input[type="datetime-local"] { text-align: left; font-size: .88rem; font-weight: 400; }
+        .bp-preview {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        .bp-preview .preview-val { font-size: 2rem; font-weight: 800; }
+        .bp-preview .preview-cat { font-size: .85rem; margin-top: 4px; font-weight: 600; }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .btn-cancel {
+            background: var(--bg);
+            color: var(--text);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: .9rem;
+            cursor: pointer;
+        }
+        .btn-cancel:hover { background: var(--border); }
+
+        /* ── Legend ── */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .78rem;
+            color: var(--text-muted);
+        }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+        /* ── Responsive ── */
+        @media (max-width: 500px) {
+            header h1 { font-size: 1rem; }
+            .bp-display { font-size: 2.2rem; }
+            .modal-fields { grid-template-columns: 1fr; }
+            .modal-fields .full { grid-column: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <h1><span>❤️</span> Monitor Pressione</h1>
+    <button class="btn-add" onclick="openModal()">+ Nuova misura</button>
+</header>
+
+<!-- Reminder Banner -->
+<div id="reminderBanner">
+    <span class="icon">⏰</span>
+    <span id="reminderText"></span>
+    <button onclick="openModal(); dismissReminder()">Registra ora</button>
+    <button onclick="dismissReminder()" style="background:#d97706; margin-left:6px;">Più tardi</button>
+</div>
+
+<!-- Tabs -->
+<div class="tabs" style="max-width:900px; margin:0 auto;">
+    <button class="tab active" onclick="switchTab('dashboard', this)">📊 Dashboard</button>
+    <button class="tab" onclick="switchTab('history', this)">📋 Storico</button>
+    <button class="tab" onclick="switchTab('analysis', this)">🔬 Analisi</button>
+    <button class="tab" onclick="switchTab('settings', this)">⚙️ Impostazioni</button>
+</div>
+
+<main>
+
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="tab-panel active">
+        <div id="dashboardContent"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="tab-history" class="tab-panel">
+        <div class="table-header">
+            <strong>Tutte le misurazioni</strong>
+            <button class="btn-export" onclick="exportCSV()">📥 Esporta CSV</button>
+        </div>
+        <div id="historyContent"></div>
+    </div>
+
+    <!-- ANALYSIS -->
+    <div id="tab-analysis" class="tab-panel">
+        <div id="analysisContent"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="tab-settings" class="tab-panel">
+        <div class="settings-section">
+            <h3>Promemoria</h3>
+            <div class="form-group">
+                <label>Intervallo tra le misurazioni</label>
+                <select id="reminderInterval">
+                    <option value="6">Ogni 6 ore</option>
+                    <option value="8">Ogni 8 ore</option>
+                    <option value="12" selected>Ogni 12 ore (mattina e sera)</option>
+                    <option value="24">Una volta al giorno</option>
+                    <option value="0">Disattivato</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notifiche browser</label>
+                <button class="btn-save" id="notifBtn" onclick="requestNotifications()">Abilita notifiche</button>
+                <span id="notifStatus" style="margin-left:10px; font-size:.85rem; color:var(--text-muted);"></span>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Dati medico <span class="future-badge">PROSSIMAMENTE</span></h3>
+            <div class="future-section">
+                <div class="fi">🏥</div>
+                <p>In futuro sarà possibile inserire i dati del tuo medico<br>per inviare automaticamente il report o connettersi<br>a sistemi sanitari integrati.</p>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Dati</h3>
+            <div class="form-group">
+                <label>Gestione dati locali</label>
+                <button class="btn-danger" onclick="clearAllData()">🗑️ Elimina tutti i dati</button>
+            </div>
+        </div>
+
+        <div style="margin-top:10px;">
+            <button class="btn-save" onclick="saveSettings()">Salva impostazioni</button>
+        </div>
+    </div>
+
+</main>
+
+<!-- Add Measurement Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal">
+        <h2>❤️ Nuova misurazione</h2>
+        <div class="modal-fields">
+            <div class="field">
+                <label>Sistolica (MAX)</label>
+                <input type="number" id="inSys" min="60" max="250" placeholder="120" oninput="updatePreview()">
+            </div>
+            <div class="field">
+                <label>Diastolica (MIN)</label>
+                <input type="number" id="inDia" min="40" max="150" placeholder="80" oninput="updatePreview()">
+            </div>
+            <div class="field">
+                <label>Polso (bpm)</label>
+                <input type="number" id="inPulse" min="30" max="220" placeholder="72" oninput="updatePreview()">
+            </div>
+            <div class="field">
+                <label>Data e ora</label>
+                <input type="datetime-local" id="inDate">
+            </div>
+            <div class="field full">
+                <label>Note</label>
+                <input type="text" id="inNote" placeholder="Es. dopo pranzo, a riposo...">
+            </div>
+        </div>
+        <div class="bp-preview" id="bpPreview" style="display:none;">
+            <div class="preview-val" id="previewVal">—</div>
+            <div class="preview-cat" id="previewCat"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()">Annulla</button>
+            <button class="btn-primary" onclick="saveMeasurement()">💾 Salva</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ──────────────────────────────────────────────
+// DATA STORE
+// ──────────────────────────────────────────────
+const STORAGE_KEY = 'bp_records';
+const SETTINGS_KEY = 'bp_settings';
+
+function getRecords() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+}
+function saveRecords(records) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+function getSettings() {
+    const defaults = { reminderHours: 12 };
+    try { return Object.assign({}, defaults, JSON.parse(localStorage.getItem(SETTINGS_KEY))); }
+    catch { return defaults; }
+}
+function saveSettingsData(s) {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+}
+
+// ──────────────────────────────────────────────
+// BP CLASSIFICATION (ESH 2023)
+// ──────────────────────────────────────────────
+function classify(sys, dia) {
+    if (!sys || !dia) return null;
+    sys = +sys; dia = +dia;
+    if (sys < 90 || dia < 60)        return { label: 'Ipotensione',          color: 'var(--blue)',   bg: 'var(--blue-bg)',   level: 0 };
+    if (sys < 120 && dia < 80)       return { label: 'Ottimale',             color: 'var(--green)',  bg: 'var(--green-bg)',  level: 1 };
+    if (sys < 130 && dia < 85)       return { label: 'Normale',              color: 'var(--green)',  bg: 'var(--green-bg)',  level: 2 };
+    if (sys < 140 && dia < 90)       return { label: 'Alta normale',         color: 'var(--yellow)', bg: 'var(--yellow-bg)', level: 3 };
+    if (sys < 160 && dia < 100)      return { label: 'Ipertensione Grado 1', color: 'var(--orange)', bg: 'var(--orange-bg)', level: 4 };
+    if (sys < 180 && dia < 110)      return { label: 'Ipertensione Grado 2', color: 'var(--red)',    bg: 'var(--red-bg)',    level: 5 };
+    if (sys >= 180 || dia >= 110)    return { label: 'Ipertensione Grado 3', color: 'var(--purple)', bg: 'var(--purple-bg)', level: 6 };
+    return null;
+}
+
+function badgeHtml(sys, dia) {
+    const c = classify(sys, dia);
+    if (!c) return '';
+    return `<span class="badge" style="background:${c.bg};color:${c.color}">${c.label}</span>`;
+}
+
+// ──────────────────────────────────────────────
+// TABS
+// ──────────────────────────────────────────────
+function switchTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'dashboard') renderDashboard();
+    if (id === 'history')   renderHistory();
+    if (id === 'analysis')  renderAnalysis();
+    if (id === 'settings')  renderSettings();
+}
+
+// ──────────────────────────────────────────────
+// MODAL
+// ──────────────────────────────────────────────
+function openModal() {
+    const now = new Date();
+    const local = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    document.getElementById('inDate').value = local;
+    document.getElementById('inSys').value = '';
+    document.getElementById('inDia').value = '';
+    document.getElementById('inPulse').value = '';
+    document.getElementById('inNote').value = '';
+    document.getElementById('bpPreview').style.display = 'none';
+    document.getElementById('modalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('inSys').focus(), 100);
+}
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+}
+function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function updatePreview() {
+    const sys = document.getElementById('inSys').value;
+    const dia = document.getElementById('inDia').value;
+    const pulse = document.getElementById('inPulse').value;
+    if (sys && dia) {
+        const c = classify(sys, dia);
+        const prev = document.getElementById('bpPreview');
+        prev.style.display = 'block';
+        prev.style.background = c ? c.bg : 'var(--bg)';
+        document.getElementById('previewVal').style.color = c ? c.color : 'var(--text)';
+        document.getElementById('previewVal').textContent = sys + '/' + dia + (pulse ? '  💓' + pulse : '');
+        document.getElementById('previewCat').textContent = c ? c.label : '';
+        document.getElementById('previewCat').style.color = c ? c.color : 'var(--text-muted)';
+    } else {
+        document.getElementById('bpPreview').style.display = 'none';
+    }
+}
+
+function saveMeasurement() {
+    const sys = parseInt(document.getElementById('inSys').value);
+    const dia = parseInt(document.getElementById('inDia').value);
+    const pulse = parseInt(document.getElementById('inPulse').value) || null;
+    const dateVal = document.getElementById('inDate').value;
+    const note = document.getElementById('inNote').value.trim();
+
+    if (!sys || !dia) { alert('Inserisci sistolica e diastolica.'); return; }
+    if (sys < 60 || sys > 250) { alert('Valore sistolica non valido (60-250).'); return; }
+    if (dia < 40 || dia > 150) { alert('Valore diastolica non valido (40-150).'); return; }
+    if (pulse !== null && (pulse < 30 || pulse > 220)) { alert('Valore polso non valido (30-220).'); return; }
+
+    const records = getRecords();
+    records.unshift({
+        id: Date.now(),
+        date: dateVal || new Date().toISOString(),
+        sys, dia,
+        pulse: pulse || null,
+        note: note || ''
+    });
+    saveRecords(records);
+    closeModal();
+    renderDashboard();
+    checkReminder();
+    showToast('Misurazione salvata!');
+}
+
+// ──────────────────────────────────────────────
+// TOAST
+// ──────────────────────────────────────────────
+function showToast(msg) {
+    let t = document.getElementById('toast');
+    if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast';
+        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 22px;border-radius:24px;font-size:.9rem;z-index:999;transition:opacity .3s;';
+        document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2000);
+}
+
+// ──────────────────────────────────────────────
+// RENDER DASHBOARD
+// ──────────────────────────────────────────────
+let dashChart = null;
+
+function renderDashboard() {
+    const records = getRecords();
+    const el = document.getElementById('dashboardContent');
+
+    if (records.length === 0) {
+        el.innerHTML = `<div class="empty-state">
+            <div class="icon">💓</div>
+            <p>Nessuna misurazione ancora.<br>Inizia a monitorare la tua pressione!</p>
+            <button class="btn-primary" onclick="openModal()">+ Aggiungi prima misura</button>
+        </div>`;
+        return;
+    }
+
+    const last = records[0];
+    const lastCat = classify(last.sys, last.dia);
+    const recent10 = records.slice(0, 10);
+    const avgSys = Math.round(recent10.reduce((a, r) => a + r.sys, 0) / recent10.length);
+    const avgDia = Math.round(recent10.reduce((a, r) => a + r.dia, 0) / recent10.length);
+    const maxSys = Math.max(...recent10.map(r => r.sys));
+    const minSys = Math.min(...recent10.map(r => r.sys));
+
+    const dateStr = formatDate(last.date);
+
+    el.innerHTML = `
+        <div class="last-reading">
+            <div>
+                <div style="font-size:.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">Ultima misurazione</div>
+                <div class="bp-display" style="color:${lastCat ? lastCat.color : 'var(--text)'}">
+                    ${last.sys}<span class="sep">/</span>${last.dia}
+                    <span style="font-size:1.4rem;color:var(--text-muted);font-weight:500"> mmHg</span>
+                </div>
+                ${last.pulse ? `<div style="margin-top:6px;color:var(--text-muted);font-size:.9rem;">💓 ${last.pulse} bpm</div>` : ''}
+                ${lastCat ? `<div style="margin-top:8px;">${badgeHtml(last.sys, last.dia)}</div>` : ''}
+            </div>
+            <div class="bp-info">
+                <div class="date">📅 ${dateStr}</div>
+                ${last.note ? `<div style="margin-top:6px;font-size:.85rem;color:var(--text-muted);">📝 ${escHtml(last.note)}</div>` : ''}
+                <div style="margin-top:12px;font-size:.82rem;color:var(--text-muted);">Totale misurazioni: <strong>${records.length}</strong></div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Media Sistolica</div>
+                <div class="value" style="color:var(--primary)">${avgSys}</div>
+                <div class="sub">Ultimi ${recent10.length} valori</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Media Diastolica</div>
+                <div class="value" style="color:var(--primary)">${avgDia}</div>
+                <div class="sub">Ultimi ${recent10.length} valori</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Massima sistolica</div>
+                <div class="value" style="color:var(--red)">${maxSys}</div>
+                <div class="sub">Ultimi ${recent10.length} valori</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Minima sistolica</div>
+                <div class="value" style="color:var(--blue)">${minSys}</div>
+                <div class="sub">Ultimi ${recent10.length} valori</div>
+            </div>
+        </div>
+
+        <div>
+            <div style="font-weight:600;margin-bottom:8px;font-size:.9rem;">Andamento ultimi ${Math.min(records.length, 14)} valori</div>
+            <div class="chart-container"><canvas id="dashChartCanvas"></canvas></div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div>Ottimale/Normale &lt;130/85</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ca8a04"></div>Alta normale 130-139/85-89</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#ea580c"></div>Ipertensione G1 140-159/90-99</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Ipertensione G2+ ≥160/≥100</div>
+        </div>
+    `;
+
+    const chartData = records.slice(0, 14).reverse();
+    const labels = chartData.map(r => formatDateShort(r.date));
+    const sysData = chartData.map(r => r.sys);
+    const diaData = chartData.map(r => r.dia);
+    const pointColors = chartData.map(r => {
+        const c = classify(r.sys, r.dia);
+        return c ? c.color : '#94a3b8';
+    });
+
+    if (dashChart) { dashChart.destroy(); dashChart = null; }
+    const ctx = document.getElementById('dashChartCanvas').getContext('2d');
+    dashChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Sistolica',
+                    data: sysData,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,.08)',
+                    tension: .35,
+                    fill: false,
+                    pointBackgroundColor: pointColors,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                },
+                {
+                    label: 'Diastolica',
+                    data: diaData,
+                    borderColor: '#7c3aed',
+                    backgroundColor: 'rgba(124,58,237,.06)',
+                    tension: .35,
+                    fill: false,
+                    pointBackgroundColor: pointColors,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderDash: [5, 3],
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top', labels: { font: { size: 12 }, usePointStyle: true } } },
+            scales: {
+                y: { min: 50, grid: { color: '#e2e8f0' }, ticks: { font: { size: 11 } } },
+                x: { grid: { display: false }, ticks: { font: { size: 11 }, maxRotation: 45 } }
+            }
+        }
+    });
+}
+
+// ──────────────────────────────────────────────
+// RENDER HISTORY
+// ──────────────────────────────────────────────
+function renderHistory() {
+    const records = getRecords();
+    const el = document.getElementById('historyContent');
+
+    if (records.length === 0) {
+        el.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>Nessuna misurazione registrata.</p></div>`;
+        return;
+    }
+
+    const rows = records.map(r => `
+        <tr>
+            <td>${formatDate(r.date)}</td>
+            <td><strong>${r.sys}/${r.dia}</strong> <span style="color:var(--text-muted);font-size:.82rem;">mmHg</span></td>
+            <td>${r.pulse ? r.pulse + ' bpm' : '—'}</td>
+            <td>${badgeHtml(r.sys, r.dia)}</td>
+            <td style="color:var(--text-muted);font-size:.82rem;">${escHtml(r.note) || '—'}</td>
+            <td><button class="btn-delete" onclick="deleteRecord(${r.id})" title="Elimina">🗑️</button></td>
+        </tr>
+    `).join('');
+
+    el.innerHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Data e ora</th>
+                    <th>Pressione</th>
+                    <th>Polso</th>
+                    <th>Categoria</th>
+                    <th>Note</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    `;
+}
+
+function deleteRecord(id) {
+    if (!confirm('Eliminare questa misurazione?')) return;
+    const records = getRecords().filter(r => r.id !== id);
+    saveRecords(records);
+    renderHistory();
+    showToast('Misurazione eliminata.');
+}
+
+// ──────────────────────────────────────────────
+// RENDER ANALYSIS
+// ──────────────────────────────────────────────
+function renderAnalysis() {
+    const records = getRecords();
+    const el = document.getElementById('analysisContent');
+
+    if (records.length < 2) {
+        el.innerHTML = `<div class="empty-state"><div class="icon">🔬</div><p>Servono almeno 2 misurazioni per l'analisi.<br>Continua a monitorare!</p></div>`;
+        return;
+    }
+
+    const last10 = records.slice(0, Math.min(10, records.length));
+    const avgSys = +(last10.reduce((a, r) => a + r.sys, 0) / last10.length).toFixed(1);
+    const avgDia = +(last10.reduce((a, r) => a + r.dia, 0) / last10.length).toFixed(1);
+    const avgPulse = last10.filter(r => r.pulse).length > 0
+        ? Math.round(last10.filter(r => r.pulse).reduce((a, r) => a + r.pulse, 0) / last10.filter(r => r.pulse).length)
+        : null;
+
+    const maxSys = Math.max(...last10.map(r => r.sys));
+    const minSys = Math.min(...last10.map(r => r.sys));
+
+    // Trend: compare first half vs second half (or first vs last if only 2)
+    const half = Math.ceil(last10.length / 2);
+    const recentHalf = last10.slice(0, half);
+    const olderHalf = last10.slice(half);
+    const recentAvgSys = recentHalf.reduce((a, r) => a + r.sys, 0) / recentHalf.length;
+    const olderAvgSys = olderHalf.length > 0 ? olderHalf.reduce((a, r) => a + r.sys, 0) / olderHalf.length : recentAvgSys;
+    const diff = recentAvgSys - olderAvgSys;
+    let trendIcon, trendText, trendColor;
+    if (Math.abs(diff) < 3)     { trendIcon = '→'; trendText = 'Stabile';    trendColor = 'var(--text-muted)'; }
+    else if (diff > 0)           { trendIcon = '↗'; trendText = 'In aumento'; trendColor = 'var(--red)'; }
+    else                         { trendIcon = '↘'; trendText = 'In calo';    trendColor = 'var(--green)'; }
+
+    // Critical readings
+    const criticals = last10.filter(r => {
+        const c = classify(r.sys, r.dia);
+        return c && c.level >= 4;
+    });
+    const grade3 = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level >= 6; });
+    const hypo = last10.filter(r => { const c = classify(r.sys, r.dia); return c && c.level === 0; });
+
+    // Build alerts
+    let alerts = '';
+    if (grade3.length > 0) {
+        alerts += alertBox('critical', '🚨', 'ATTENZIONE: Ipertensione di Grado 3 rilevata',
+            `Nei tuoi ultimi ${last10.length} dati hai ${grade3.length} misurazione/i con pressione ≥ 180/110 mmHg (Ipertensione Grado 3). È consigliabile contattare il medico il prima possibile.`);
+    }
+    if (criticals.length >= 3) {
+        alerts += alertBox('danger', '⚠️', 'Valori elevati frequenti',
+            `${criticals.length} misurazioni su ${last10.length} rientrano in Ipertensione Grado 1 o superiore. Consulta il medico per una valutazione.`);
+    } else if (criticals.length >= 1 && criticals.length < 3) {
+        alerts += alertBox('warn', '⚠️', 'Alcuni valori elevati rilevati',
+            `${criticals.length} misurazione/i presenta pressione nel range Ipertensione Grado 1 (140-159/90-99). Monitora con attenzione.`);
+    }
+    if (hypo.length > 0) {
+        alerts += alertBox('low', '💡', 'Ipotensione rilevata',
+            `${hypo.length} misurazione/i con pressione inferiore a 90/60 mmHg (Ipotensione). Se accompagnata da sintomi, consulta il medico.`);
+    }
+    if (avgSys >= 130 || avgDia >= 85) {
+        alerts += alertBox('warn', '📊', 'Media superiore al valore ottimale',
+            `La tua media (${avgSys}/${avgDia} mmHg) supera i valori ottimali (<120/80). Discutine con il tuo medico durante la prossima visita.`);
+    }
+    if (!alerts) {
+        const avgCat = classify(Math.round(avgSys), Math.round(avgDia));
+        const label = avgCat ? avgCat.label : 'nella norma';
+        alerts = alertBox('ok', '✅', 'Valori nella norma',
+            `Ottimo! I tuoi ultimi ${last10.length} valori mostrano una pressione mediamente ${label.toLowerCase()}. Continua a monitorare regolarmente.`);
+    }
+
+    // Report for doctor
+    const reportLines = last10.map(r => {
+        const c = classify(r.sys, r.dia);
+        return `• ${formatDate(r.date)}: ${r.sys}/${r.dia} mmHg${r.pulse ? ', polso '+r.pulse+' bpm' : ''}  [${c ? c.label : '—'}]${r.note ? '  ('+r.note+')' : ''}`;
+    });
+
+    el.innerHTML = `
+        <div style="font-weight:600;margin-bottom:16px;">Analisi ultimi ${last10.length} valori</div>
+
+        ${alerts}
+
+        <div class="analysis-grid">
+            <div class="analysis-item">
+                <div class="val" style="color:var(--primary)">${avgSys}</div>
+                <div class="lbl">Media sistolica</div>
+            </div>
+            <div class="analysis-item">
+                <div class="val" style="color:var(--purple)">${avgDia}</div>
+                <div class="lbl">Media diastolica</div>
+            </div>
+            <div class="analysis-item">
+                <div class="val" style="color:${trendColor}">${trendIcon}</div>
+                <div class="lbl">Tendenza sistolica</div>
+                <div class="trend" style="color:${trendColor}">${trendText}</div>
+            </div>
+            <div class="analysis-item">
+                <div class="val" style="color:var(--text-muted)">${maxSys}</div>
+                <div class="lbl">Massima sistolica</div>
+            </div>
+            <div class="analysis-item">
+                <div class="val" style="color:var(--text-muted)">${minSys}</div>
+                <div class="lbl">Minima sistolica</div>
+            </div>
+            ${avgPulse ? `<div class="analysis-item">
+                <div class="val" style="color:var(--red)">💓 ${avgPulse}</div>
+                <div class="lbl">Media polso (bpm)</div>
+            </div>` : ''}
+        </div>
+
+        <div class="report-box">
+            <h4>Report per il medico — copia e incolla</h4>
+            <div style="font-family:monospace;font-size:.82rem;line-height:1.8;">
+                <strong>MONITORAGGIO PRESSIONE ARTERIOSA</strong><br>
+                Periodo: ${formatDateShort(last10[last10.length-1].date)} → ${formatDateShort(last10[0].date)}<br>
+                Media: ${avgSys}/${avgDia} mmHg | Tendenza: ${trendText}<br>
+                ${avgPulse ? 'Polso medio: '+avgPulse+' bpm<br>' : ''}
+                <br>
+                ${reportLines.join('<br>')}
+            </div>
+            <div style="margin-top:12px;">
+                <button class="btn-export" onclick="copyReport()">📋 Copia testo</button>
+                <span style="margin-left:8px;color:var(--text-muted);font-size:.82rem;">oppure</span>
+                <button class="btn-export" onclick="exportCSV()" style="margin-left:8px;">📥 Esporta CSV</button>
+            </div>
+        </div>
+    `;
+}
+
+function alertBox(type, icon, title, text) {
+    const cls = { ok: 'alert-ok', warn: 'alert-warn', danger: 'alert-danger', critical: 'alert-critical', low: 'alert-low' }[type];
+    return `<div class="alert-box ${cls}">
+        <span class="icon">${icon}</span>
+        <div><h4>${title}</h4><p>${text}</p></div>
+    </div>`;
+}
+
+function copyReport() {
+    const box = document.querySelector('.report-box div[style*="monospace"]');
+    const text = box.innerText;
+    navigator.clipboard.writeText(text).then(() => showToast('Report copiato!'));
+}
+
+// ──────────────────────────────────────────────
+// RENDER SETTINGS
+// ──────────────────────────────────────────────
+function renderSettings() {
+    const s = getSettings();
+    document.getElementById('reminderInterval').value = s.reminderHours;
+    updateNotifStatus();
+}
+
+function saveSettings() {
+    const hours = parseInt(document.getElementById('reminderInterval').value);
+    saveSettingsData({ reminderHours: hours });
+    showToast('Impostazioni salvate!');
+    checkReminder();
+}
+
+function clearAllData() {
+    if (!confirm('Eliminare TUTTI i dati? Questa azione è irreversibile.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    renderDashboard();
+    showToast('Tutti i dati eliminati.');
+}
+
+// ──────────────────────────────────────────────
+// REMINDER
+// ──────────────────────────────────────────────
+function checkReminder() {
+    const s = getSettings();
+    if (s.reminderHours === 0) { dismissReminder(); return; }
+    const records = getRecords();
+    if (records.length === 0) return;
+
+    const last = new Date(records[0].date);
+    const hoursAgo = (Date.now() - last.getTime()) / 3600000;
+
+    if (hoursAgo >= s.reminderHours) {
+        const h = Math.floor(hoursAgo);
+        document.getElementById('reminderText').textContent =
+            `Ultima misurazione ${h < 24 ? h + ' ore fa' : Math.floor(h/24) + ' giorni fa'}. Ora di registrare i valori!`;
+        document.getElementById('reminderBanner').classList.add('show');
+
+        // Browser notification
+        if (Notification.permission === 'granted') {
+            new Notification('Monitor Pressione', {
+                body: `Sono passate ${h} ore dall'ultima misurazione. Registra la pressione!`,
+                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">❤️</text></svg>'
+            });
+        }
+    } else {
+        dismissReminder();
+    }
+}
+
+function dismissReminder() {
+    document.getElementById('reminderBanner').classList.remove('show');
+}
+
+function requestNotifications() {
+    if (!('Notification' in window)) {
+        showToast('Le notifiche non sono supportate dal browser.');
+        return;
+    }
+    Notification.requestPermission().then(p => {
+        updateNotifStatus();
+        if (p === 'granted') showToast('Notifiche abilitate!');
+    });
+}
+
+function updateNotifStatus() {
+    const el = document.getElementById('notifStatus');
+    if (!el) return;
+    if (!('Notification' in window)) { el.textContent = 'Non supportato'; return; }
+    const map = { granted: '✅ Abilitate', denied: '❌ Bloccate (abilita dal browser)', default: '⬜ Non configurate' };
+    el.textContent = map[Notification.permission] || '';
+    document.getElementById('notifBtn').style.display = Notification.permission === 'granted' ? 'none' : 'inline-block';
+}
+
+// ──────────────────────────────────────────────
+// EXPORT CSV
+// ──────────────────────────────────────────────
+function exportCSV() {
+    const records = getRecords();
+    if (records.length === 0) { showToast('Nessun dato da esportare.'); return; }
+    const header = 'Data,Ora,Sistolica,Diastolica,Polso,Categoria,Note';
+    const rows = records.map(r => {
+        const d = new Date(r.date);
+        const cat = classify(r.sys, r.dia);
+        return [
+            d.toLocaleDateString('it-IT'),
+            d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
+            r.sys,
+            r.dia,
+            r.pulse || '',
+            cat ? cat.label : '',
+            '"' + (r.note || '').replace(/"/g, '""') + '"'
+        ].join(',');
+    });
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'pressione_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('CSV esportato!');
+}
+
+// ──────────────────────────────────────────────
+// HELPERS
+// ──────────────────────────────────────────────
+function formatDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+        ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+}
+function formatDateShort(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }) +
+        ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+}
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ──────────────────────────────────────────────
+// KEYBOARD SHORTCUTS
+// ──────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && document.getElementById('modalOverlay').classList.contains('open')) {
+        if (e.target.tagName !== 'BUTTON') saveMeasurement();
+    }
+});
+
+// ──────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────
+renderDashboard();
+checkReminder();
+
+// Re-check reminder every 15 minutes
+setInterval(checkReminder, 15 * 60 * 1000);
+</script>
+</body>
+</html>
