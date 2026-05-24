@@ -1,0 +1,20 @@
+{
+  "name": "Monitor Pressione Arteriosa",
+  "short_name": "Pressione",
+  "description": "Monitora e analizza la pressione arteriosa",
+  "start_url": "./pressione.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F8FE",
+  "theme_color": "#6B9FD4",
+  "orientation": "portrait-primary",
+  "lang": "it",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
