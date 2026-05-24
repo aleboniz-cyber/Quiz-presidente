@@ -525,6 +525,26 @@
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: var(--text-muted); }
         .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
+        /* ── Stats period filter ── */
+        .stats-filter {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .sf-btn {
+            padding: 5px 16px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: .8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .sf-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .sf-btn:hover:not(.active) { border-color: var(--primary); color: var(--primary-dark); }
+
         /* ── Responsive ── */
         @media (max-width: 500px) {
             header h1 { font-size: .95rem; }
@@ -1181,7 +1201,13 @@ function showToast(msg) {
 // ──────────────────────────────────────────────
 // RENDER DASHBOARD
 // ──────────────────────────────────────────────
-let dashChart = null;
+let dashChart    = null;
+let statsFilter  = '15';  // '15' | 'month'
+
+function changeStatsFilter(val) {
+    statsFilter = val;
+    renderDashboard();
+}
 
 function renderDashboard() {
     const records = getRecords();
@@ -1197,14 +1223,58 @@ function renderDashboard() {
         return;
     }
 
-    const last     = records[0];
-    const lastCat  = classify(last.sys, last.dia);
-    const recent10 = records.slice(0, 10);
-    const avgSys   = Math.round(recent10.reduce((a, r) => a + r.sys, 0) / recent10.length);
-    const avgDia   = Math.round(recent10.reduce((a, r) => a + r.dia, 0) / recent10.length);
-    const maxSys   = Math.max(...recent10.map(r => r.sys));
-    const minSys   = Math.min(...recent10.map(r => r.sys));
-    const dateStr  = formatDate(last.date);
+    // Calcolo periodo statistiche
+    const thirtyDaysAgo = Date.now() - 30 * 24 * 3600 * 1000;
+    const statRecords = statsFilter === 'month'
+        ? records.filter(r => new Date(r.date).getTime() >= thirtyDaysAgo)
+        : records.slice(0, 15);
+
+    const periodLabel = statsFilter === 'month'
+        ? `Ultimi 30 giorni (${statRecords.length} mis.)`
+        : `Ultimi ${statRecords.length} valori`;
+
+    const last    = records[0];
+    const lastCat = classify(last.sys, last.dia);
+    const dateStr = formatDate(last.date);
+
+    let statsHtml = '';
+    if (statRecords.length === 0) {
+        statsHtml = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.9rem;background:var(--bg);border-radius:var(--r);">Nessuna misurazione nell'ultimo mese.</div>`;
+    } else {
+        const avgSys = Math.round(statRecords.reduce((a, r) => a + r.sys, 0) / statRecords.length);
+        const avgDia = Math.round(statRecords.reduce((a, r) => a + r.dia, 0) / statRecords.length);
+        const maxSys = Math.max(...statRecords.map(r => r.sys));
+        const minSys = Math.min(...statRecords.map(r => r.sys));
+        const avgCat = classify(avgSys, avgDia);
+        statsHtml = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Media Sistolica</div>
+                <div class="value" style="color:${avgCat ? avgCat.color : 'var(--primary)'}">${avgSys}</div>
+                <div class="sub">${periodLabel}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Media Diastolica</div>
+                <div class="value" style="color:${avgCat ? avgCat.color : 'var(--primary)'}">${avgDia}</div>
+                <div class="sub">${periodLabel}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Massima sistolica</div>
+                <div class="value" style="color:#C94040">${maxSys}</div>
+                <div class="sub">${periodLabel}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Minima sistolica</div>
+                <div class="value" style="color:#5B9EC9">${minSys}</div>
+                <div class="sub">${periodLabel}</div>
+            </div>
+        </div>`;
+    }
+
+    // Dati grafico: usa lo stesso periodo (max 30 punti per leggibilità)
+    const chartSource = statsFilter === 'month'
+        ? statRecords.slice().reverse()
+        : records.slice(0, 15).reverse();
 
     const greeting = profile.nome ? `<div style="font-size:.9rem;color:var(--text-muted);margin-bottom:16px;">Ciao, <strong>${escHtml(profile.nome)}</strong> 👋</div>` : '';
 
@@ -1227,31 +1297,15 @@ function renderDashboard() {
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="label">Media Sistolica</div>
-                <div class="value" style="color:var(--primary)">${avgSys}</div>
-                <div class="sub">Ultimi ${recent10.length} valori</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Media Diastolica</div>
-                <div class="value" style="color:var(--primary)">${avgDia}</div>
-                <div class="sub">Ultimi ${recent10.length} valori</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Massima sistolica</div>
-                <div class="value" style="color:#C94040">${maxSys}</div>
-                <div class="sub">Ultimi ${recent10.length} valori</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Minima sistolica</div>
-                <div class="value" style="color:#5B9EC9">${minSys}</div>
-                <div class="sub">Ultimi ${recent10.length} valori</div>
-            </div>
+        <div class="stats-filter">
+            <button class="sf-btn ${statsFilter === '15' ? 'active' : ''}" onclick="changeStatsFilter('15')">Ultimi 15</button>
+            <button class="sf-btn ${statsFilter === 'month' ? 'active' : ''}" onclick="changeStatsFilter('month')">Ultimo mese</button>
         </div>
 
+        ${statsHtml}
+
         <div>
-            <div style="font-weight:600;margin-bottom:8px;font-size:.88rem;color:var(--text-muted);">Andamento ultimi ${Math.min(records.length, 14)} valori</div>
+            <div style="font-weight:600;margin-bottom:8px;font-size:.88rem;color:var(--text-muted);">Andamento — ${periodLabel}</div>
             <div class="chart-container"><canvas id="dashChartCanvas"></canvas></div>
         </div>
 
@@ -1263,7 +1317,7 @@ function renderDashboard() {
         </div>
     `;
 
-    const chartData   = records.slice(0, 14).reverse();
+    const chartData   = chartSource;
     const labels      = chartData.map(r => formatDateChart(r.date));
     const sysData     = chartData.map(r => r.sys);
     const diaData     = chartData.map(r => r.dia);
