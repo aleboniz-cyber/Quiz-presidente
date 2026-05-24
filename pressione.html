@@ -1335,7 +1335,18 @@ function renderDashboard() {
                     labels: {
                         font: { size: 12 },
                         usePointStyle: true,
-                        filter: item => item.text !== ''
+                        generateLabels: chart => chart.data.datasets
+                            .filter(d => d.label)
+                            .map((d, _, arr) => ({
+                                text:        d.label,
+                                fillStyle:   d.borderColor,
+                                strokeStyle: d.borderColor,
+                                lineWidth:   d.borderWidth,
+                                lineDash:    d.borderDash || [],
+                                pointStyle:  'circle',
+                                hidden:      false,
+                                datasetIndex: chart.data.datasets.indexOf(d)
+                            }))
                     }
                 }
             },
