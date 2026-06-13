@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
-import { sendLeadToSalesforce } from "@/lib/salesforce";
+import { sendStoredLead } from "@/lib/sendLead";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -14,24 +13,9 @@ export async function POST(_req: Request, { params }: Params) {
   if (!user) return NextResponse.json({ error: "Non autenticato" }, { status: 401 });
   const { id } = await params;
 
-  const lead = await prisma.lead.findUnique({ where: { id } });
-  if (!lead) return NextResponse.json({ error: "Non trovato" }, { status: 404 });
-  if (lead.ownerEmail !== user.email && user.role !== "admin") {
-    return NextResponse.json({ error: "Non autorizzato" }, { status: 403 });
+  const { outcome, httpStatus } = await sendStoredLead(id, user);
+  if (httpStatus !== 200) {
+    return NextResponse.json({ error: outcome.message }, { status: httpStatus });
   }
-
-  const result = await sendLeadToSalesforce(lead);
-
-  const updated = await prisma.lead.update({
-    where: { id },
-    data: {
-      status: result.status,
-      salesforceId: result.salesforceId ?? lead.salesforceId,
-      salesforceType: result.salesforceType ?? lead.salesforceType,
-      importMessage: result.message,
-      sentAt: result.status === "SENT" ? new Date() : lead.sentAt
-    }
-  });
-
-  return NextResponse.json({ result, lead: updated });
+  return NextResponse.json({ result: outcome });
 }
