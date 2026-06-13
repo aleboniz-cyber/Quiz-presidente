@@ -30,21 +30,38 @@ Next.js 15 (App Router, TypeScript) · NextAuth · Prisma · PostgreSQL · jsfor
  Admin ────────────► /api/admin/leads ───────► tutti i record (solo admin)
 ```
 
-## Setup locale
+## Avvio rapido in locale (zero configurazione)
+
+Per **vedere subito il flusso** senza Postgres, senza Azure e senza API key.
+Il DB è SQLite, l'accesso usa un **login di sviluppo** (sola email) e
+OCR/analisi/trascrizione/Salesforce girano in modalità **mock**.
 
 ```bash
 cd card-scanner
-cp .env.example .env.local   # poi compila i valori
+cp .env.example .env.local   # i default vanno già bene per il test locale
 npm install
-npm run db:push              # crea le tabelle
+npm run db:push              # crea il file SQLite dev.db
 npm run dev                  # http://localhost:3000
 ```
 
-### Database in locale (SQLite, opzionale)
+Apri http://localhost:3000 → verrai mandato alla pagina di login:
+- inserisci una **email** (usa quella in `ADMIN_EMAILS` per vedere anche `/admin`)
+  e un nome, poi **Entra (login di sviluppo)**.
+- Prova il flusso: *Scansiona* (carica una foto qualsiasi) → *Note* → *Analizza*
+  → *Anteprima* → *Salva e invia*. Con le chiavi assenti vedrai dati mock e
+  l'invio Salesforce risponderà "non configurato": è normale.
 
-Per provare senza Postgres, in `prisma/schema.prisma` imposta
-`provider = "sqlite"` e in `.env.local` `DATABASE_URL="file:./dev.db"`, poi
-`npm run db:push`.
+> Il login di sviluppo è attivo **solo** quando l'SSO Microsoft non è configurato
+> e fuori dalla produzione. Appena imposti le variabili `AZURE_AD_*`, l'app passa
+> automaticamente al login SSO Microsoft.
+
+## Setup completo (servizi reali)
+
+```bash
+cp .env.example .env.local   # compila i valori dei servizi che vuoi attivare
+npm run db:push
+npm run dev
+```
 
 ## Configurazione servizi
 
@@ -74,7 +91,8 @@ esposte ai sales. L'invio verifica i duplicati per email prima di creare il Lead
 ## Deploy su Azure
 
 - **Azure App Service** (Node 20) o **Static Web Apps + API**.
-- **Azure Database for PostgreSQL** per `DATABASE_URL`.
+- **Azure Database for PostgreSQL**: in `prisma/schema.prisma` imposta
+  `provider = "postgresql"` e in `DATABASE_URL` la stringa del DB Azure.
 - Imposta tutte le variabili d'ambiente nella configurazione dell'App Service.
 - Aggiorna `NEXTAUTH_URL` e il redirect URI Entra ID con il dominio di produzione.
 

@@ -1,27 +1,23 @@
 // Prisma schema - Card Scanner
-// In produzione: PostgreSQL (Azure Database for PostgreSQL).
-// In locale puoi passare a SQLite cambiando provider in "sqlite"
-// e DATABASE_URL="file:./dev.db".
+//
+// DEFAULT: SQLite, per girare in locale a zero configurazione.
+// PRODUZIONE (Azure): cambia provider in "postgresql" e imposta
+// DATABASE_URL sul tuo Azure Database for PostgreSQL.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-enum LeadStatus {
-  DRAFT // bozza salvata, non ancora inviata a Salesforce
-  SENT // inviata con successo a Salesforce
-  DUPLICATE // lead gia' esistente su Salesforce
-  FAILED // invio fallito
-}
-
+// Stati possibili (stringa per compatibilita' SQLite/Postgres):
+// DRAFT | SENT | DUPLICATE | FAILED
 model Lead {
-  id        String     @id @default(cuid())
-  status    LeadStatus @default(DRAFT)
+  id     String @id @default(cuid())
+  status String @default("DRAFT")
 
   // Utente (sales) che ha acquisito il contatto
   ownerEmail String
@@ -42,31 +38,31 @@ model Lead {
   country   String?
 
   // Campi valorizzati dall'analisi AI (scheda lead)
-  industry      String?
-  leadSource    String? @default("Business Card")
-  rating        String? // Hot / Warm / Cold
+  industry       String?
+  leadSource     String? @default("Business Card")
+  rating         String? // Hot / Warm / Cold
   estimatedValue String?
-  nextStep      String?
-  aiSummary     String? @db.Text
+  nextStep       String?
+  aiSummary      String?
 
   // Note grezze del sales
-  textNotes        String? @db.Text
-  audioTranscript  String? @db.Text
+  textNotes       String?
+  audioTranscript String?
 
   // OCR grezzo del biglietto
-  rawOcr String? @db.Text
+  rawOcr String?
 
   // Riferimento immagine biglietto (data URL o storage key)
-  cardImageRef String? @db.Text
+  cardImageRef String?
 
   // Esito invio a Salesforce
-  salesforceId      String?
-  salesforceType    String? // "Lead" | "Contact"
-  importMessage     String? @db.Text
-  sentAt            DateTime?
+  salesforceId   String?
+  salesforceType String? // "Lead" | "Contact"
+  importMessage  String?
+  sentAt         DateTime?
 
-  createdAt DateTime @updatedAt @map("updated_at")
-  updatedAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([ownerEmail])
   @@index([status])

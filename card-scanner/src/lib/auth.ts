@@ -1,21 +1,62 @@
 import type { NextAuthOptions } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { isAdminEmail } from "./authz";
 
-/**
- * Configurazione NextAuth con SSO Microsoft Entra ID.
- * Il ruolo (admin/user) viene calcolato in base a ADMIN_EMAILS e
- * iniettato nel token JWT e nella sessione.
- */
-export const authOptions: NextAuthOptions = {
-  providers: [
+const azureConfigured = Boolean(
+  process.env.AZURE_AD_CLIENT_ID &&
+    process.env.AZURE_AD_CLIENT_SECRET &&
+    process.env.AZURE_AD_TENANT_ID
+);
+
+// Login di sviluppo: attivo SOLO se l'SSO Microsoft non e' configurato
+// e non siamo in produzione. Permette di testare l'app in locale senza Azure.
+const devLoginEnabled =
+  process.env.NODE_ENV !== "production" && !azureConfigured;
+
+const providers: NextAuthOptions["providers"] = [];
+
+if (azureConfigured) {
+  providers.push(
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID ?? "",
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET ?? "",
       tenantId: process.env.AZURE_AD_TENANT_ID ?? "",
       authorization: { params: { scope: "openid profile email User.Read" } }
     })
-  ],
+  );
+}
+
+if (devLoginEnabled) {
+  providers.push(
+    CredentialsProvider({
+      id: "dev",
+      name: "Dev login",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        name: { label: "Nome", type: "text" }
+      },
+      async authorize(credentials) {
+        const email = credentials?.email?.trim();
+        if (!email) return null;
+        return {
+          id: email,
+          email,
+          name: credentials?.name?.trim() || email
+        };
+      }
+    })
+  );
+}
+
+/**
+ * Configurazione NextAuth.
+ * - Produzione: SSO Microsoft Entra ID.
+ * - Locale (senza Azure): login di sviluppo con sola email.
+ * Il ruolo (admin/user) viene calcolato da ADMIN_EMAILS.
+ */
+export const authOptions: NextAuthOptions = {
+  providers,
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token }) {
