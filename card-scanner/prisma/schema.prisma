@@ -1,0 +1,73 @@
+// Prisma schema - Card Scanner
+// In produzione: PostgreSQL (Azure Database for PostgreSQL).
+// In locale puoi passare a SQLite cambiando provider in "sqlite"
+// e DATABASE_URL="file:./dev.db".
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  DRAFT // bozza salvata, non ancora inviata a Salesforce
+  SENT // inviata con successo a Salesforce
+  DUPLICATE // lead gia' esistente su Salesforce
+  FAILED // invio fallito
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+  status    LeadStatus @default(DRAFT)
+
+  // Utente (sales) che ha acquisito il contatto
+  ownerEmail String
+  ownerName  String?
+
+  // Campi contatto estratti / modificabili
+  firstName String?
+  lastName  String?
+  fullName  String?
+  company   String?
+  title     String?
+  email     String?
+  phone     String?
+  mobile    String?
+  website   String?
+  address   String?
+  city      String?
+  country   String?
+
+  // Campi valorizzati dall'analisi AI (scheda lead)
+  industry      String?
+  leadSource    String? @default("Business Card")
+  rating        String? // Hot / Warm / Cold
+  estimatedValue String?
+  nextStep      String?
+  aiSummary     String? @db.Text
+
+  // Note grezze del sales
+  textNotes        String? @db.Text
+  audioTranscript  String? @db.Text
+
+  // OCR grezzo del biglietto
+  rawOcr String? @db.Text
+
+  // Riferimento immagine biglietto (data URL o storage key)
+  cardImageRef String? @db.Text
+
+  // Esito invio a Salesforce
+  salesforceId      String?
+  salesforceType    String? // "Lead" | "Contact"
+  importMessage     String? @db.Text
+  sentAt            DateTime?
+
+  createdAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @map("created_at")
+
+  @@index([ownerEmail])
+  @@index([status])
+}
