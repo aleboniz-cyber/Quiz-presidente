@@ -9,10 +9,13 @@ const azureConfigured = Boolean(
     process.env.AZURE_AD_TENANT_ID
 );
 
-// Login di sviluppo: attivo SOLO se l'SSO Microsoft non e' configurato
-// e non siamo in produzione. Permette di testare l'app in locale senza Azure.
+// Login di sviluppo / demo:
+// - in locale: attivo se l'SSO Microsoft non e' configurato;
+// - online: attivabile esplicitamente con ALLOW_DEV_LOGIN="true" (solo per demo,
+//   da rimuovere prima dell'uso reale).
 const devLoginEnabled =
-  process.env.NODE_ENV !== "production" && !azureConfigured;
+  process.env.ALLOW_DEV_LOGIN === "true" ||
+  (process.env.NODE_ENV !== "production" && !azureConfigured);
 
 const providers: NextAuthOptions["providers"] = [];
 

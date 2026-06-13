@@ -1,15 +1,15 @@
 // Prisma schema - Card Scanner
 //
-// DEFAULT: SQLite, per girare in locale a zero configurazione.
-// PRODUZIONE (Azure): cambia provider in "postgresql" e imposta
-// DATABASE_URL sul tuo Azure Database for PostgreSQL.
+// DEFAULT: PostgreSQL (per deploy online: Vercel+Neon o Azure Postgres).
+// Per sviluppo OFFLINE puoi cambiare provider in "sqlite" e usare
+// DATABASE_URL="file:./dev.db".
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
